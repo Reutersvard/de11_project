@@ -6,10 +6,10 @@ ui <- fluidPage(
              
              # creates the element for the top row
              fluidRow(column(width = 4,
-                      radioButtons("icu_choice_1", "ICU choice",
+                            radioButtons("icu_choice_1", "ICU choice",
                                    choices = c("Yes", "No"))),
                       column(width = 4,
-                             numericInput("age_range_1", "Age Range",
+                             numericInput("age_range_1", "Age Choice",
                                           value = 1, min = 1, max = 100),
                              ),
                       column(width = 4,
@@ -18,16 +18,21 @@ ui <- fluidPage(
                                             end = "2022-01-01",
                                           )
                              )
-                    )
-             ),
+                    ),
+             
              
              # creates the element for the main row, first half
-             fluidRow(column(width = 6),
+             fluidRow(column(width = 6,
+                             radioButtons("placeholder", "PLACEHOLDER",
+                                          choices = "eep")
+                             ),
                       
               # creates the element for the main row, second half
-                      column(width = 6)
-                      
+                      column(width = 6,
+                             plotOutput("whisky_plot")
+                            )
                       ),
+    ),
 
     # creates the navigation for ICU tab
     tabPanel("ICU"
