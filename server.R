@@ -1,11 +1,9 @@
 server <- function(input, output) {
   
-  output$whisky_map <- renderLeaflet({
+  output$whisky_plot <- renderPlot({
     whisky_df %>% 
-      filter(Region == input$region) %>% 
-      leaflet %>% 
-      addTiles() %>% 
-      addCircleMarkers(lat = ~lat, lng = ~long, popup = ~Distillery)
+      ggplot() +
+      geom_histogram(aes(x = Capacity))
   })
   
   
