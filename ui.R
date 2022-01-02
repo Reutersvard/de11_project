@@ -21,13 +21,14 @@ ui <- fluidPage(
                     ),
              
              
-             # creates the element for the main row, first half
+             # creates the element for the main row, first half (this is currently a placeholder as R
+             # does not show both plots when inputting two, but both will be plots)
              fluidRow(column(width = 6,
                              radioButtons("placeholder", "PLACEHOLDER",
                                           choices = "eep")
                              ),
                       
-              # creates the element for the main row, second half
+              # creates the element for the main row, second half - this will also be a plot
                       column(width = 6,
                              plotOutput("icu_plot")
                             )
