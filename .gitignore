@@ -4,5 +4,6 @@
 .Ruserdata
 .DS_Store
 .DStore
+.Rapp.history
 
 # Soon to add raw_data
