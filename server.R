@@ -43,14 +43,34 @@ server <- function(input, output) {
 # Statistics plots --------------------------------------------------------
   
     output$some_plot <- renderPlot({
-      activity_specialty %>%
-        filter(specialty_name == "Neurology") %>%
-        ggplot(aes(quarter)) +
-        geom_histogram(stat = "count") 
+      ICU_quarter %>% 
+        ggplot(aes(n, quarter)) +
+        geom_boxplot() 
+    })
+    
+    #  The histogram
+    # output$some_plot <- renderPlot({
+    #   ICU_quarter %>% 
+    #     ggplot(aes(n, quarter)) +
+    #     geom_boxplot() 
+    # })
+    # 
+    
+    
+    #  The null distribution
+    output$null_plot <- renderPlot({
+    ICU_quarter %>% 
+      filter(quarter %in% c("Q3", "Q4")) %>%
+      specify(n ~ quarter) %>% 
+      hypothesise(null = "independence") %>% 
+      generate(reps = 10000, type = "permute") %>% 
+      calculate(stat = "diff in means", order = c("Q4", "Q3")) %>% 
+      visualise() +
+      shade_pvalue(obs_stat = 81 - 63, direction =  "right")
     })
     
     output$stat_text <- renderText({
-      print("this is a placeholder text for the description of the plot in the A&E tab")
+      print("A discussion of the p-value etc here")
     })  
     
 }

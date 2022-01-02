@@ -9,16 +9,14 @@ Ricardo will use this file to test all the plots and stats. Feel free to do that
 # This is a placeholder idea: ICU admissions being greater on average in Q4
 
 ICU_quarter <- activity_specialty %>%
+  filter(specialty == "CC") %>% 
+  count(quarter) %>% 
   mutate(quarter = case_when(
     str_detect(quarter, "Q1") ~ "Q1",
     str_detect(quarter, "Q2") ~ "Q2",
     str_detect(quarter, "Q3") ~ "Q3",
-    str_detect(quarter, "Q4") ~ "Q4"),
-    ICU_flag = if_else(specialty == "CC", 1, 0)) %>% 
-  select(id, quarter, ICU_flag) %>% 
-  group_by(quarter) %>% 
-  summarise(proportion = mean(ICU_flag))
-
+    str_detect(quarter, "Q4") ~ "Q4"))
+    
 
 ICU_quarter %>% 
   ggplot(aes(n, quarter)) +
@@ -39,15 +37,14 @@ ICU_quarter %>%
 ```
 
 
-
 ```{r}
-obs_stat <- ICU_quarter %>%
+ICU_quarter %>% 
+  filter(quarter %in% c("Q3", "Q4")) %>%
   specify(n ~ quarter) %>% 
-  calculate(stat = "diff in means",
-            order = c("Q1", "Q2", "Q3", "Q4"))
-```
-
-```{r}
-
+  hypothesise(null = "independence") %>% 
+  generate(reps = 10000, type = "permute") %>% 
+  calculate(stat = "diff in means", order = c("Q4", "Q3")) %>% 
+  visualise() +
+  shade_pvalue(obs_stat = 81 - 63, direction =  "right")
 ```
 

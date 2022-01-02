@@ -106,7 +106,7 @@ ui <- fluidPage(
          
             # this is a placeholder plot
             column(width = 8,
-                plotOutput("neurology_plot"))
+                plotOutput("some_plot"))
          ),
          
          # create the left box with date selection
@@ -117,9 +117,14 @@ ui <- fluidPage(
                                choices = c("ICU", "A&E"))
                   ),
          
-             # create the bottom right box with text description
-            column(width = 8,
-                textOutput("A discussion of the p-value etc here"))
-          )
+          # this is a placeholder plot
+           column(width = 8,
+                  plotOutput("null_plot")) 
+           
+          ),
+
+         fluidRow(  # create the bottom right box with text description
+           column(width = 8,
+                  textOutput("stat_text")))
     )
 ))
