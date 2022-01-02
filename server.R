@@ -1,9 +1,11 @@
 server <- function(input, output) {
   
-  output$whisky_plot <- renderPlot({
-    whisky_df %>% 
-      ggplot() +
-      geom_histogram(aes(x = Capacity))
+  # Placeholder example plot
+  output$icu_plot <- renderPlot({
+    activity_specialty %>%
+      filter(specialty_name == "Intensive Care Medicine") %>%
+      ggplot(aes(quarter)) +
+      geom_histogram(stat = "count")
   })
   
   

@@ -29,7 +29,7 @@ ui <- fluidPage(
                       
               # creates the element for the main row, second half
                       column(width = 6,
-                             plotOutput("whisky_plot")
+                             plotOutput("icu_plot")
                             )
                       ),
     ),

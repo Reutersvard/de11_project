@@ -6,15 +6,11 @@ library(leaflet)
 library(tsibble)
 library(janitor)
 library(shinythemes) # Themes maybe?
-library(ggthemes) 
+library(ggthemes)
+library(infer)
 
-library(CodeClanData) # Example data
+
+# Sourcing scripts --------------------------------------------------------
+source("scripts/clean_data.R")
 
 
-# Data reading & cleaning -------------------------------------------------
-
-whisky_df <-CodeClanData::whisky %>% 
-  rename(long = Latitude,
-         lat = Longitude)
-
-hospita_activity <- read_csv("raw_data/hospital_activity.csv") %>% clean_names()
