@@ -13,4 +13,6 @@ library(infer)
 # Sourcing scripts --------------------------------------------------------
 source("scripts/clean_data.R")
 
+# We can load the clean data here
+
 
