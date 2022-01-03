@@ -5,11 +5,10 @@ library(tidyverse)
 library(lubridate)
 library(here)
 
-raw_beds <- read_csv(here(
-  "raw_data/beds_by_nhs_board_of_treatment_and_specialty.csv"))
+raw_beds <- read_csv(here("raw_data/beds_specialty.csv"))
 
 
-wranged_beds <- raw_beds %>% 
+wrangled_beds <- raw_beds %>% 
   clean_names() %>% 
   # Create new column for quarters
   mutate(q = str_sub(quarter, -2)) %>% 
@@ -59,14 +58,14 @@ wranged_beds <- raw_beds %>%
   # filter out the na
   filter(location != is.na(location)) %>% 
   # take out unused columns
-  # take out location to remove duplicate
+  # take out location to remove duplicates
   select(date, quarter, hb, specialty_name, all_staffed_beds, 
          total_occupied_beds, average_available_staffed_beds,
          average_occupied_beds, percentage_occupancy)
 
 
 
-write_csv(wranged_beds, "clean_data/beds_by_nhs_clean_data.csv")
+write_csv(wrangled_beds, here("clean_data/beds_specialty_clean.csv"))
 
 
  

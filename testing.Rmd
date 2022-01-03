@@ -12,3 +12,8 @@ activity_specialty %>%
   geom_histogram(stat = "count")
 ```
 
+```{r}
+wrangled_beds %>% 
+  count(hb)
+```
+
