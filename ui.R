@@ -7,6 +7,13 @@ sidebar <- dashboardSidebar(
       menuItem("ICU Admissions", tabName = "icu", icon = icon("poll")),
       menuItem("A&E Admissions", tabName = "ae", icon = icon("poll")),
       menuItem("Statistics", tabName = "stats", icon = icon("chart-line")),
+      sliderInput("date_range", label = "Date Range",
+                  min = as.Date("2016-01-01","%Y-%m-%d"),
+                  max = as.Date("2021-12-31","%Y-%m-%d"),
+                  value = c(as.Date("2016-01-01"),
+                            as.Date("2021-12-31")),
+                  timeFormat="%Y-%m-%d",
+                  step = 90),
       actionButton("applyButton",
                    "Apply Changes")
     )
@@ -23,15 +30,15 @@ body <- dashboardBody(
             br(),
 
             # creates the element for the top row
-            fluidRow(column(width = 4,
+            fluidRow(column(width = 3,
                                   br(),
                                   radioButtons("icu_choice_1", "ICU choice",
                                                choices = c("Yes", "No"))),
-                       column(width = 4,
+                       column(width = 3,
                                   br(),
-                                  numericInput("age_range_1", "Age Choice",
+                                  numericInput("age_range_1", "Age",
                                                value = 1, min = 1, max = 100)),
-                       column(width = 4,
+                       column(width = 3,
                                   br(),
                                   sliderInput("date_range", label = "Date Range",
                                               min = as.Date("2016-01-01","%Y-%m-%d"),
@@ -41,7 +48,12 @@ body <- dashboardBody(
                                               timeFormat="%Y-%m-%d",
                                               step = 90
                                               )
-                                  )
+                                  ),
+                        column(width = 3,
+                                  br(),
+                                  actionButton("applyButton",
+                                               "Apply Changes")
+                                )
                      ),
 
               # creates the element for the main row, first half (this is a placeholder plot)
@@ -69,7 +81,7 @@ body <- dashboardBody(
 
                 # creates the sidebar panel
                 sidebarPanel(
-                  numericInput("age_range_1", "Age Choice",
+                  numericInput("age_range_1", "Age",
                                value = 1, min = 1, max = 100),
 
                   # create the left box with date selection and button
@@ -115,7 +127,7 @@ body <- dashboardBody(
 
               # creates the sidebar panel
               sidebarPanel(
-                numericInput("age_range_1", "Age Choice",
+                numericInput("age_range_1", "Age",
                              value = 1, min = 1, max = 100),
 
                 # create the left box with date selection
@@ -190,8 +202,18 @@ body <- dashboardBody(
   )
 )
 
+# Main dashboard and CSS -------------------------------------------------------
 dashboardPage(skin = "purple",
   dashboardHeader(title = "PHS Project"),
     sidebar,
-    body
+    dashboardBody(
+      tags$head(
+        tags$style(HTML('
+         .main-header .logo {
+          font-family: "Source Sans Pro","Helvetica Neue", Helvetica, Arial, sans-serif;
+          font-weight: bold;
+          font-size: 24px;
+          }'))
+      )
+    )
 )
