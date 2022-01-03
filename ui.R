@@ -1,4 +1,7 @@
-ui <- fluidPage(
+ui <- dashboardPage(
+  dashboardHeader(title = "HEADER"),
+  dashboardSidebar(),
+  dashboardBody(
   tabsetPanel(
 
 # Overview tab ----------------------------------------------------------------
@@ -134,3 +137,4 @@ tabPanel("A&E",
              ),
     ),          
   )
+)
