@@ -65,7 +65,7 @@ body <- dashboardBody(
                 ),
           ),
 
-    # ICU tab content ----------------------------------------------------------
+    # ICU tab tab ----------------------------------------------------------
     tabItem(tabName = "icu",
 
             # creates a space between the top bar and the main page
@@ -111,7 +111,7 @@ body <- dashboardBody(
                     )
               ),
 
-    # A&E tab content-----------------------------------------------------------
+    # A&E tab tab-----------------------------------------------------------
     tabItem(tabName = "ae",
 
             # creates a space between the top bar and the main page
@@ -157,12 +157,13 @@ body <- dashboardBody(
               )
 
     ),
-
-# Statistics tab ---------------------------------------------------------------
+    
+    # Statistics tab -----------------------------------------------------------
     # creates the navigation for statistics tab
-tabPanel("Statistics",
+    tabItem(tabName = "Statistics",
 
          # create the element for the left column
+          br(),
          fluidRow(
            column(width = 4,
                   radioButtons("plot_input",
@@ -192,8 +193,7 @@ tabPanel("Statistics",
          fluidRow(  # create the bottom right box with text description
            column(width = 8,
                   textOutput("stat_text")))
-)
-    ),
+        )
   )
 )
 
