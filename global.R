@@ -8,10 +8,12 @@ library(janitor)
 library(shinythemes) # Themes maybe?
 library(ggthemes)
 library(infer)
+library(lubridate)
 library(shinydashboard)
 
 
-# Sourcing scripts --------------------------------------------------------
-source("scripts/clean_data.R")
+# Source scripts & read clean data ----------------------------------------
 
+source("scripts/clean_data.R")
+clean_beds <- read_csv("clean_data/clean_beds.csv")
 
