@@ -150,9 +150,40 @@ tabPanel("A&E",
 
 
 # Statistics tab ---------------------------------------------------------------
-    # creates the navigation for statistics tab - Ricardo
-    tabPanel("Statistics"
-             ),
+    # creates the navigation for statistics tab
+tabPanel("Statistics",
+         
+         # create the element for the left column
+         fluidRow(
+           column(width = 4,
+                  radioButtons("plot_input",
+                               "Select plot type",
+                               choices = c("Box plot", "Histogram"))
+           ),
+           
+           # this is a placeholder plot
+           column(width = 8,
+                  plotOutput("some_plot"))
+         ),
+         
+         # create the left box with date selection
+         fluidRow(
+           column(width = 4, 
+                  radioButtons("variable_input",
+                               "Analysis on which variable?",
+                               choices = c("ICU", "A&E"))
+           ),
+           
+           # this is a placeholder plot
+           column(width = 8,
+                  plotOutput("null_plot")) 
+           
+         ),
+         
+         fluidRow(  # create the bottom right box with text description
+           column(width = 8,
+                  textOutput("stat_text")))
+)
     ),          
   )
 )

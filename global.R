@@ -8,10 +8,13 @@ library(janitor)
 library(shinythemes) # Themes maybe?
 library(ggthemes)
 library(infer)
+library(lubridate)
 library(shinydashboard)
 
 
-# Sourcing scripts --------------------------------------------------------
+# Source scripts & read clean data ----------------------------------------
+
 source("scripts/clean_data.R")
 
 
+# We can load the clean data here

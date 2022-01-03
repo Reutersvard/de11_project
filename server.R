@@ -41,4 +41,39 @@ server <- function(input, output) {
       print("this is a placeholder text for the description of the plot in the A&E tab")
     })
 
+# placeholder input for Stats tab ----------------------------------------------
+    
+    output$some_plot <- renderPlot({
+      clean_beds %>% 
+        filter(hb == "S92000003") %>% 
+        ggplot(aes(quarter, percentage_occupancy)) +
+        geom_col() 
+    })
+    
+    #  The histogram
+    # output$some_plot <- renderPlot({
+    #   ICU_quarter %>% 
+    #     ggplot(aes(n, quarter)) +
+    #     geom_boxplot() 
+    # })
+    # 
+    
+    
+    #  The null distribution
+    output$null_plot <- renderPlot({
+      clean_beds %>% 
+        filter(hb == "S92000003") %>%
+        mutate(winter_flag = if_else(str_detect(quarter, "Q1") | str_detect(quarter, "Q4"), "yes", "no")) %>% 
+        specify(percentage_occupancy ~ winter_flag) %>% 
+        hypothesise(null = "independence") %>% 
+        generate(reps = 10000, type = "permute") %>% 
+        calculate(stat = "diff in means", order = c("yes", "no")) %>% 
+        visualise() +
+        shade_pvalue(obs_stat = 70.575, direction =  "right")
+    })
+    
+    output$stat_text <- renderText({
+      print("A discussion of the p-value etc here")
+    })  
+      
 }
