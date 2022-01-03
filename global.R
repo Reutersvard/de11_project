@@ -15,6 +15,5 @@ library(shinydashboard)
 # Source scripts & read clean data ----------------------------------------
 
 source("scripts/clean_data.R")
+clean_beds <- read_csv("clean_data/clean_beds.csv")
 
-
-# We can load the clean data here

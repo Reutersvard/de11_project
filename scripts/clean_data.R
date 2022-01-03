@@ -12,3 +12,6 @@ clean_beds <- beds_specialty %>%
   mutate(winter_flag = if_else(
     str_detect(quarter, "Q1") | str_detect(quarter, "Q4"), "yes", "no"
     ))
+
+write_csv(clean_beds, "clean_data/clean_beds.csv")
+rm(beds_specialty, clean_beds)
