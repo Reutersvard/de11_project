@@ -47,42 +47,55 @@ ui <- fluidPage(
     tabPanel("ICU",
              
              # create the element for the left column
-             fluidRow(column(width = 4,
-                             br(),
-                             numericInput("age_range_1", "Age Choice",
-                                          value = 1, min = 1, max = 100),
-                             ),
-                      
-              # create the element for the right column -(this is a placeholder plot)
-                      column(width = 8,
-                             br(),
-                             plotOutput("dermatology_plot")
-                             )
-                      ),
-             
-             # create the left box with date selection
-             fluidRow(column(width = 4,
-                             br(),
-                             sliderInput("date_range", label = "Date Range",
-                                         min = as.Date("2016-01-01","%Y-%m-%d"),
-                                         max = as.Date("2021-12-31","%Y-%m-%d"),
-                                         value = c(as.Date("2016-01-01"),
-                                                    as.Date("2021-12-31")),
-                                         timeFormat="%Y-%m-%d",
-                                         step = 90
-                                         )
-                             ),
-                      
-              # create the bottom right box with text description
-                      column(width = 8,
-                             br(),
-                             textOutput("icu_text_placeholder")
-                             )
+             sidebarLayout(
+               
+               # creates the sidebar panel
+               sidebarPanel(
+                 numericInput("age_range_1", "Age Choice",
+                              value = 1, min = 1, max = 100),
+                 
+                 # create the left box with date selection
+                 sliderInput("date_range", label = "Date Range",
+                             min = as.Date("2016-01-01","%Y-%m-%d"),
+                             max = as.Date("2021-12-31","%Y-%m-%d"),
+                             value = c(as.Date("2016-01-01"),
+                                       as.Date("2021-12-31")),
+                             timeFormat="%Y-%m-%d",
+                             step = 90
+                            )
+                          ),
+               
+               # creates the main panel
+               mainPanel(
+                 
+                 # create the element for the right column -(this is a placeholder plot)
+                 fluidRow(column(width = 8,
+                                 br(),
+                                 plotOutput("dermatology_plot"),
+                                 br(),
+                                 br(),
+                                 br(),
+                                 
+                                 # create the bottom right box with text description
+                                 textOutput("icu_text_placeholder")
+                                 )
+                          )
+                        )
+                    )
              ),
-    ),
+
 
 # A&E tab ----------------------------------------------------------------------
     # creates the navigation for A&E tab
+
+
+
+
+
+
+
+
+
     tabPanel("A&E",
              
              # create the element for the left column
