@@ -17,10 +17,14 @@ ui <- fluidPage(
                              ),
                       column(width = 4,
                              br(),
-                             dateRangeInput("date_range_1", "Date Range",
-                                            start = "2016-01-01",
-                                            end = "2022-01-01"
-                                            )
+                             sliderInput("date_range", label = "Date Range",
+                                         min = as.Date("2016-01-01","%Y-%m-%d"),
+                                         max = as.Date("2021-12-31","%Y-%m-%d"),
+                                         value = c(as.Date("2016-01-01"),
+                                                   as.Date("2021-12-31")),
+                                         timeFormat="%Y-%m-%d",
+                                         step = 90
+                                        )
                              )
                     ),
              
@@ -98,9 +102,14 @@ ui <- fluidPage(
              # create the left box with date selection
              fluidRow(column(width = 4,
                              br(),
-                             dateRangeInput("date_range_1", "Date Range",
-                                            start = "2016-01-01",
-                                            end = "2022-01-01")
+                             sliderInput("date_range", label = "Date Range",
+                                         min = as.Date("2016-01-01","%Y-%m-%d"),
+                                         max = as.Date("2021-12-31","%Y-%m-%d"),
+                                         value = c(as.Date("2016-01-01"),
+                                                   as.Date("2021-12-31")),
+                                         timeFormat="%Y-%m-%d",
+                                         step = 90
+                                        )
                             ),
                       
               # create the bottom right box with text description
