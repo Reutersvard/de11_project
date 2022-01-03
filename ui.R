@@ -6,7 +6,9 @@ sidebar <- dashboardSidebar(
       menuItem("Overview", tabName = "overview", icon = icon("columns")),
       menuItem("ICU Admissions", tabName = "icu", icon = icon("poll")),
       menuItem("A&E Admissions", tabName = "ae", icon = icon("poll")),
-      menuItem("Statistics", tabName = "stats", icon = icon("chart-line"))
+      menuItem("Statistics", tabName = "stats", icon = icon("chart-line")),
+      actionButton("applyButton",
+                   "Apply Changes")
     )
 )
 
@@ -14,22 +16,22 @@ sidebar <- dashboardSidebar(
 body <- dashboardBody(
   tabItems(
 
-    # overview tab content
+# Overview tab ----------------------------------------------------------------
     tabItem(tabName = "overview",
 
             # creates a space between the top bar and the main page
             br(),
 
             # creates the element for the top row
-            fluidRow(column(width = 2,
+            fluidRow(column(width = 4,
                                   br(),
                                   radioButtons("icu_choice_1", "ICU choice",
-                                               choices = c("Yes", "No")))),
-                       column(width = 2,
+                                               choices = c("Yes", "No"))),
+                       column(width = 4,
                                   br(),
                                   numericInput("age_range_1", "Age Choice",
                                                value = 1, min = 1, max = 100)),
-                       column(width = 3,
+                       column(width = 4,
                                   br(),
                                   sliderInput("date_range", label = "Date Range",
                                               min = as.Date("2016-01-01","%Y-%m-%d"),
@@ -39,13 +41,8 @@ body <- dashboardBody(
                                               timeFormat="%Y-%m-%d",
                                               step = 90
                                               )
-                                  ),
-                          
-                       column(width = 2,
-                                  br(),
-                                  actionButton("applyButton",
-                                               "Apply Changes")
-                                  ),
+                                  )
+                     ),
 
               # creates the element for the main row, first half (this is a placeholder plot)
               fluidRow(column(width = 6,
@@ -61,7 +58,7 @@ body <- dashboardBody(
                 ),
           ),
 
-    # ICU tab tab ----------------------------------------------------------
+    # ICU tab ----------------------------------------------------------
     tabItem(tabName = "icu",
 
             # creates a space between the top bar and the main page
@@ -107,7 +104,7 @@ body <- dashboardBody(
                     )
               ),
 
-    # A&E tab tab-----------------------------------------------------------
+    # A&E tab-----------------------------------------------------------
     tabItem(tabName = "ae",
 
             # creates a space between the top bar and the main page
