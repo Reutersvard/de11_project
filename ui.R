@@ -3,10 +3,10 @@
 # creates the sidebar menu -----------------------------------------------------
 sidebar <- dashboardSidebar(
     sidebarMenu(
-      menuItem("Overview", tabName = "overview", icon = icon("dashboard")),
-      menuItem("ICU Admissions", tabName = "icu", icon = icon("th")),
-      menuItem("A&E Admissions", tabName = "ae", icon = icon("th")),
-      menuItem("Statistics", tabName = "stats", icon = icon("th"))
+      menuItem("Overview", tabName = "overview", icon = icon("columns")),
+      menuItem("ICU Admissions", tabName = "icu", icon = icon("poll")),
+      menuItem("A&E Admissions", tabName = "ae", icon = icon("poll")),
+      menuItem("Statistics", tabName = "stats", icon = icon("chart-line"))
     )
 )
 
