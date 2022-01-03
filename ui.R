@@ -7,13 +7,16 @@ ui <- fluidPage(
              
              # creates the element for the top row
              fluidRow(column(width = 4,
+                            br(),
                             radioButtons("icu_choice_1", "ICU choice",
                                    choices = c("Yes", "No"))),
                       column(width = 4,
+                             br(),
                              numericInput("age_range_1", "Age Choice",
                                           value = 1, min = 1, max = 100),
                              ),
                       column(width = 4,
+                             br(),
                              dateRangeInput("date_range_1", "Date Range",
                                             start = "2016-01-01",
                                             end = "2022-01-01"
@@ -23,11 +26,13 @@ ui <- fluidPage(
              
              # creates the element for the main row, first half (this is a placeholder plot)
              fluidRow(column(width = 6,
+                             br(),
                              plotOutput("cardio_plot")
                              ),
                       
               # creates the element for the main row, second half - (this is a placeholder plot)
                       column(width = 6,
+                             br(),
                              plotOutput("icu_plot")
                             )
                       ),
@@ -39,18 +44,21 @@ ui <- fluidPage(
              
              # create the element for the left column
              fluidRow(column(width = 4,
+                             br(),
                              numericInput("age_range_1", "Age Choice",
                                           value = 1, min = 1, max = 100),
                              ),
                       
               # create the element for the right column -(this is a placeholder plot)
                       column(width = 8,
+                             br(),
                              plotOutput("dermatology_plot")
                              )
                       ),
              
              # create the left box with date selection
-             fluidRow(column(width = 4, 
+             fluidRow(column(width = 4,
+                             br(),
                              dateRangeInput("date_range_1", "Date Range",
                                             start = "2016-01-01",
                                             end = "2022-01-01")
@@ -58,6 +66,7 @@ ui <- fluidPage(
                       
               # create the bottom right box with text description
                       column(width = 8,
+                             br(),
                              textOutput("icu_text_placeholder")
                              )
              ),
@@ -69,18 +78,21 @@ ui <- fluidPage(
              
              # create the element for the left column
              fluidRow(column(width = 4,
+                             br(),
                              numericInput("age_range_1", "Age Choice",
                                           value = 1, min = 1, max = 100),
              ),
              
              # create the element for the right column - this is a placeholder plot
              column(width = 8,
+                    br(),
                     plotOutput("neurology_plot")
                   )
              ),
              
              # create the left box with date selection
-             fluidRow(column(width = 4, 
+             fluidRow(column(width = 4,
+                             br(),
                              dateRangeInput("date_range_1", "Date Range",
                                             start = "2016-01-01",
                                             end = "2022-01-01")
@@ -88,6 +100,7 @@ ui <- fluidPage(
                       
               # create the bottom right box with text description
                       column(width = 8,
+                             br(),
                             textOutput("ae_text_placeholder")
                             )
                       ),
