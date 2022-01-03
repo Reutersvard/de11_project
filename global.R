@@ -8,6 +8,7 @@ library(janitor)
 library(shinythemes) # Themes maybe?
 library(ggthemes)
 library(infer)
+library(lubridate)
 
 
 # Sourcing scripts --------------------------------------------------------

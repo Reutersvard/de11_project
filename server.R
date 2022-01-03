@@ -43,9 +43,10 @@ server <- function(input, output) {
 # Statistics plots --------------------------------------------------------
   
     output$some_plot <- renderPlot({
-      ICU_quarter %>% 
-        ggplot(aes(n, quarter)) +
-        geom_boxplot() 
+      clean_beds %>% 
+        filter(hb == "S92000003") %>% 
+        ggplot(aes(quarter, percentage_occupancy)) +
+        geom_col() 
     })
     
     #  The histogram
@@ -59,14 +60,15 @@ server <- function(input, output) {
     
     #  The null distribution
     output$null_plot <- renderPlot({
-    ICU_quarter %>% 
-      filter(quarter %in% c("Q3", "Q4")) %>%
-      specify(n ~ quarter) %>% 
-      hypothesise(null = "independence") %>% 
-      generate(reps = 10000, type = "permute") %>% 
-      calculate(stat = "diff in means", order = c("Q4", "Q3")) %>% 
-      visualise() +
-      shade_pvalue(obs_stat = 81 - 63, direction =  "right")
+      clean_beds %>% 
+        filter(hb == "S92000003") %>%
+        mutate(winter_flag = if_else(str_detect(quarter, "Q1") | str_detect(quarter, "Q4"), "yes", "no")) %>% 
+        specify(percentage_occupancy ~ winter_flag) %>% 
+        hypothesise(null = "independence") %>% 
+        generate(reps = 10000, type = "permute") %>% 
+        calculate(stat = "diff in means", order = c("yes", "no")) %>% 
+        visualise() +
+        shade_pvalue(obs_stat = 70.575, direction =  "right")
     })
     
     output$stat_text <- renderText({
