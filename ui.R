@@ -21,16 +21,15 @@ body <- dashboardBody(
             br(),
 
             # creates the element for the top row
-            fluidRow(box(column(width = 3,
+            fluidRow(column(width = 2,
                                   br(),
                                   radioButtons("icu_choice_1", "ICU choice",
                                                choices = c("Yes", "No")))),
-                       box(column(width = 3,
+                       column(width = 2,
                                   br(),
                                   numericInput("age_range_1", "Age Choice",
-                                               value = 1, min = 1, max = 100),
-                       )),
-                       box(column(width = 3,
+                                               value = 1, min = 1, max = 100)),
+                       column(width = 3,
                                   br(),
                                   sliderInput("date_range", label = "Date Range",
                                               min = as.Date("2016-01-01","%Y-%m-%d"),
@@ -40,15 +39,13 @@ body <- dashboardBody(
                                               timeFormat="%Y-%m-%d",
                                               step = 90
                                               )
-                                  )
-                          ),
-                       box(column(width = 3,
+                                  ),
+                          
+                       column(width = 2,
                                   br(),
                                   actionButton("applyButton",
                                                "Apply Changes")
-                                  )
-                          )
-                       ),
+                                  ),
 
               # creates the element for the main row, first half (this is a placeholder plot)
               fluidRow(column(width = 6,
@@ -61,7 +58,6 @@ body <- dashboardBody(
                                br(),
                                plotOutput("icu_plot")
                               )
-
                 ),
           ),
 
@@ -160,7 +156,7 @@ body <- dashboardBody(
     
     # Statistics tab -----------------------------------------------------------
     # creates the navigation for statistics tab
-    tabItem(tabName = "Statistics",
+    tabItem(tabName = "stats",
 
          # create the element for the left column
           br(),
