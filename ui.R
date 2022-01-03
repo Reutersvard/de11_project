@@ -1,5 +1,5 @@
-ui <- dashboardPage(
-  dashboardHeader(title = "HEADER"),
+ui <- dashboardPage( skin = "purple", 
+  dashboardHeader(title = "PHS Project"),
   dashboardSidebar(),
   dashboardBody(
   tabsetPanel(
@@ -8,17 +8,20 @@ ui <- dashboardPage(
     # creates the navigation for Overview tab
     tabPanel("Overview",
              
+             # creates a space between the top bar and the main page
+             br(),
+             
              # creates the element for the top row
-             fluidRow(column(width = 3,
+             fluidRow(box(column(width = 3,
                             br(),
                             radioButtons("icu_choice_1", "ICU choice",
-                                   choices = c("Yes", "No"))),
-                      column(width = 3,
+                                   choices = c("Yes", "No")))),
+                      box(column(width = 3,
                              br(),
                              numericInput("age_range_1", "Age Choice",
                                           value = 1, min = 1, max = 100),
-                             ),
-                      column(width = 3,
+                             )),
+                      box(column(width = 3,
                              br(),
                              sliderInput("date_range", label = "Date Range",
                                          min = as.Date("2016-01-01","%Y-%m-%d"),
@@ -28,13 +31,13 @@ ui <- dashboardPage(
                                          timeFormat="%Y-%m-%d",
                                          step = 90
                                         )
-                             ),
-                      column(width = 3,
+                             )),
+                      box(column(width = 3,
                              br(),
                              actionButton("applyButton",
                                           "Apply Changes")
                              )
-                    ),
+                    )),
              
              # creates the element for the main row, first half (this is a placeholder plot)
              fluidRow(column(width = 6,
@@ -53,6 +56,9 @@ ui <- dashboardPage(
 # ICU tab ----------------------------------------------------------------------
     # creates the navigation for ICU tab
     tabPanel("ICU",
+             
+             # creates a space between the top bar and the main page
+             br(),
              
              # create the element for the left column
              sidebarLayout(
@@ -98,6 +104,9 @@ ui <- dashboardPage(
 # A&E tab ----------------------------------------------------------------------
     # creates the navigation for A&E tab
 tabPanel("A&E",
+         
+         # creates a space between the top bar and the main page
+         br(),
          
          # create the element for the left column
          sidebarLayout(
