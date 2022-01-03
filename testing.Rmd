@@ -3,17 +3,43 @@ title: "R Notebook"
 output: html_notebook
 ---
 
-Ricardo will use this file to test all the plots and stats. Feel free to do that too. We'll add it to gitignore later.
+Use this file to test all the plots and stats. Feel free to do that too. We'll add it to gitignore later.
 
 ```{r}
-activity_specialty %>%
-  filter(specialty_name == "Intensive Care Medicine") %>%
-  ggplot(aes(quarter)) +
-  geom_histogram(stat = "count")
+clean_beds <- beds_specialty %>%
+  filter(specialty == "CC", location_qf == "d")
+```   
+
+```{r}
+clean_beds %>% 
+  ggplot(aes(quarter, total_occupied_beds/all_staffed_beds)) +
+  geom_col() +
+  facet_wrap(~hb)
 ```
 
 ```{r}
-wrangled_beds %>% 
-  count(hb)
+clean_beds %>% 
+      filter(hb == "S92000003") %>%
+      mutate(winter_flag = if_else(str_detect(quarter, "Q1") | str_detect(quarter, "Q4"), 1, 0))
+```
+
+```{r}
+clean_beds %>% 
+      filter(hb == "S92000003") %>%
+      mutate(winter_flag = if_else(str_detect(quarter, "Q1") | str_detect(quarter, "Q4"), 1, 0)) %>% 
+      summarise(mean = mean(percentage_occupancy))
+```
+
+
+```{r}
+clean_beds %>% 
+      filter(hb == "S92000003") %>%
+      mutate(winter_flag = if_else(str_detect(quarter, "Q1") | str_detect(quarter, "Q4"), "yes", "no")) %>% 
+  specify(percentage_occupancy ~ winter_flag) %>% 
+  hypothesise(null = "independence") %>% 
+  generate(reps = 10000, type = "permute") %>% 
+  calculate(stat = "diff in means", order = c("yes", "no")) %>% 
+  visualise() +
+  shade_pvalue(obs_stat = 70.575, direction =  "right")
 ```
 

@@ -63,7 +63,6 @@ server <- function(input, output) {
     output$null_plot <- renderPlot({
       clean_beds %>% 
         filter(hb == "S92000003") %>%
-        mutate(winter_flag = if_else(str_detect(quarter, "Q1") | str_detect(quarter, "Q4"), "yes", "no")) %>% 
         specify(percentage_occupancy ~ winter_flag) %>% 
         hypothesise(null = "independence") %>% 
         generate(reps = 10000, type = "permute") %>% 
