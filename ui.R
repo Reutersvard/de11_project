@@ -9,16 +9,16 @@ ui <- dashboardPage(
     tabPanel("Overview",
              
              # creates the element for the top row
-             fluidRow(column(width = 4,
+             fluidRow(column(width = 3,
                             br(),
                             radioButtons("icu_choice_1", "ICU choice",
                                    choices = c("Yes", "No"))),
-                      column(width = 4,
+                      column(width = 3,
                              br(),
                              numericInput("age_range_1", "Age Choice",
                                           value = 1, min = 1, max = 100),
                              ),
-                      column(width = 4,
+                      column(width = 3,
                              br(),
                              sliderInput("date_range", label = "Date Range",
                                          min = as.Date("2016-01-01","%Y-%m-%d"),
@@ -28,6 +28,11 @@ ui <- dashboardPage(
                                          timeFormat="%Y-%m-%d",
                                          step = 90
                                         )
+                             ),
+                      column(width = 3,
+                             br(),
+                             actionButton("applyButton",
+                                          "Apply Changes")
                              )
                     ),
              
@@ -57,7 +62,7 @@ ui <- dashboardPage(
                  numericInput("age_range_1", "Age Choice",
                               value = 1, min = 1, max = 100),
                  
-                 # create the left box with date selection
+                 # create the left box with date selection and button
                  sliderInput("date_range", label = "Date Range",
                              min = as.Date("2016-01-01","%Y-%m-%d"),
                              max = as.Date("2021-12-31","%Y-%m-%d"),
@@ -65,8 +70,10 @@ ui <- dashboardPage(
                                        as.Date("2021-12-31")),
                              timeFormat="%Y-%m-%d",
                              step = 90
-                            )
-                          ),
+                            ),
+                 actionButton("applyButton",
+                              "Apply Changes")        
+                 ),
                
                # creates the main panel
                mainPanel(
@@ -108,7 +115,9 @@ tabPanel("A&E",
                                    as.Date("2021-12-31")),
                          timeFormat="%Y-%m-%d",
                          step = 90
-             )
+             ),
+             actionButton("applyButton",
+                          "Apply Changes")   
            ),
            
            # creates the main panel

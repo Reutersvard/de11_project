@@ -15,6 +15,8 @@ server <- function(input, output) {
         geom_histogram(stat = "count") 
   })
     
+    # eventReactive(input$applyButton
+    
 # placeholder input for the ICU tab --------------------------------------------
     output$dermatology_plot <- renderPlot({
       activity_specialty %>%
