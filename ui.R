@@ -206,14 +206,5 @@ body <- dashboardBody(
 dashboardPage(skin = "purple",
   dashboardHeader(title = "PHS Project"),
     sidebar,
-    dashboardBody(
-      tags$head(
-        tags$style(HTML('
-         .main-header .logo {
-          font-family: "Source Sans Pro","Helvetica Neue", Helvetica, Arial, sans-serif;
-          font-weight: bold;
-          font-size: 24px;
-          }'))
-      )
-    )
+    body
 )
