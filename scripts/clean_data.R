@@ -21,10 +21,6 @@ ae <- read_csv("raw_data/monthly_ae_waitingtimes_202110.csv")
 
 clean_ae <- ae %>%
   clean_names() %>%
-  mutate(date = ym(month),
-         date_01 = as.Date(month, format = "%Y-%m"))
-
-clean_ae <- clean_ae %>%
-mutate(year_month = as.yearmon(clean_ae$date))
+  mutate(date = ym(month))
 
 write_csv(clean_ae, "clean_data/clean_ae.csv")
