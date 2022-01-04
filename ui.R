@@ -117,7 +117,7 @@ body <- dashboardBody(
                     )
               ),
 
-    # A&E tab-----------------------------------------------------------
+# A&E tab-----------------------------------------------------------
     tabItem(tabName = "ae",
 
             # creates a space between the top bar and the main page
@@ -213,10 +213,10 @@ body <- dashboardBody(
 
 # Main dashboard and CSS -------------------------------------------------------
 dashboardPage(skin = "purple",
-  dashboardHeader(title = "PHS Project"),
-  sidebar,
-  body,
-  tags$head(
-    tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
+    dashboardHeader(title = "PHS Project"),
+    sidebar,
+    body,
+    tags$head(
+      tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
   )
 )

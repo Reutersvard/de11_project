@@ -65,13 +65,12 @@ server <- function(input, output) {
         geom_col() 
     })
     
-    #  The histogram
+    #  # The histogram
     # output$some_plot <- renderPlot({
-    #   ICU_quarter %>% 
+    #   ICU_quarter %>%
     #     ggplot(aes(n, quarter)) +
-    #     geom_boxplot() 
+    #     geom_boxplot()
     # })
-    # 
     
     
     #  The null distribution
