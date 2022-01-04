@@ -4,8 +4,8 @@
 sidebar <- dashboardSidebar(
     sidebarMenu(
       menuItem("Overview", tabName = "overview", icon = icon("columns")),
-      menuItem("ICU Admissions", tabName = "icu", icon = icon("poll")),
-      menuItem("A&E Admissions", tabName = "ae", icon = icon("poll")),
+      menuItem("COVID Insights", tabName = "covid", icon = icon("laptop-medical")),
+      menuItem("A&E Admissions", tabName = "ae", icon = icon("chart-bar")),
       menuItem("Statistics", tabName = "stats", icon = icon("chart-line")),
       setSliderColor(c("#7CB342", "#7CB342", "#7CB342", "#7CB342"), c(1, 2, 3, 4)),
       sliderInput("date_range", label = "Date Range",
@@ -72,8 +72,8 @@ body <- dashboardBody(
                 ),
           ),
 
-# ICU tab ----------------------------------------------------------
-    tabItem(tabName = "icu",
+# COVID tab ----------------------------------------------------------
+    tabItem(tabName = "covid",
 
             # creates a space between the top bar and the main page
             br(),
