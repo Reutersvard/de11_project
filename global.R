@@ -10,6 +10,7 @@ library(ggthemes)
 library(infer)
 library(lubridate)
 library(shinydashboard)
+library(slider)
 
 
 # Source scripts & read clean data ----------------------------------------

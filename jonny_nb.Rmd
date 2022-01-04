@@ -1,0 +1,223 @@
+---
+title: "PHS_project_02"
+author: "Jonny Nelson"
+date: "02/01/2022"
+output: html_document
+---
+```{r include = F}
+library(janitor)
+library(tidyverse)
+library(lubridate)
+library(tsibbledata)
+library(tsibble)
+library(fable)
+library(slider)
+library(feasts)
+library(tidyquant)
+library(sf)
+library(rgdal)
+
+ae <- read_csv("monthly_ae_waitingtimes_202110.csv")
+
+nhs_boards <- read_csv("PHS_a_and_e_health_board_keys.csv")
+```
+
+```{r}
+ae_clean <- ae %>%
+  clean_names() %>%
+  mutate(date = ym(month),
+         date_01 = as.Date(month, format = "%Y-%m"),
+         year_month = as.yearmon(date))
+```
+
+# Histogram of Admissions
+
+```{r}
+ae_clean %>%
+  select(date, number_of_attendances_aggregate, department_type) %>%
+  filter(date >= "2017-07-01") %>%
+  mutate(
+    moving_avg = slide_dbl(
+      .x = number_of_attendances_aggregate, 
+      .f = ~ mean(., na.rm = TRUE),
+      .before = 100,
+      .after = 100
+    )
+  ) %>%
+  ggplot() +
+  geom_col(aes(x = date, y =  number_of_attendances_aggregate, fill = department_type)) +
+  ggtitle("Time Series for Number of Attendances") +
+  labs(x = "Date", y = "Number of Attendances")
+
+# Need to get the moving average to work
+```
+# Transforming data into per year basis
+
+```{r}
+ae_clean %>%
+  select(date, number_of_attendances_aggregate, department_type, hbt) %>%
+  filter(date >= "2017-07-01") %>%
+  mutate(
+    moving_avg = slide_dbl(
+      .x = number_of_attendances_aggregate, 
+      .f = ~ mean(., na.rm = TRUE),
+      .before = 100,
+      .after = 100
+    )
+  ) %>%
+  ggplot() +
+  geom_col(aes(x = date, y =  number_of_attendances_aggregate, fill = department_type)) +
+  ggtitle("Time Series for Number of Attendances") +
+  labs(x = "Date", y = "Number of Attendances")
+```
+# Number of Attendances by HBT
+
+```{r}
+ae_clean %>%
+  select(date, number_of_attendances_aggregate, department_type, hbt) %>%
+  filter(date >= "2017-07-01") %>%
+  mutate(
+    moving_avg = slide_dbl(
+      .x = number_of_attendances_aggregate, 
+      .f = ~ mean(., na.rm = TRUE),
+      .before = 100,
+      .after = 100
+    )
+  ) %>%
+  ggplot() +
+  geom_col(aes(x = date, y =  number_of_attendances_aggregate, fill = hbt)) +
+  ggtitle("Time Series for Number of Attendances") +
+  labs(x = "Date", y = "Number of Attendances")
+```
+
+# Attendances over 8 Hours
+
+```{r}
+ae_clean %>%
+  select(date, attendance_greater8hrs, department_type, hbt) %>%
+  filter(date >= "2017-07-01") %>%
+  ggplot() +
+  geom_col(aes(x = date, y =  attendance_greater8hrs, fill = department_type)) +
+  ggtitle("Time Series for Number of Attendances over 8 Hours") +
+  labs(x = "Date", y = "Number of Attendances over 8 Hours")
+```
+
+
+# Time Series for Number of Attendances over 12 Hours
+
+```{r}
+ae_clean %>%
+  select(date, attendance_greater12hrs, department_type, hbt) %>%
+  # filter(date >= "2017-07-01") %>%
+  ggplot() +
+  geom_col(aes(x = date, y =  attendance_greater12hrs, fill = department_type)) +
+  ggtitle("Time Series for Number of Attendances over 12 Hours") +
+  labs(x = "Date", y = "Number of Attendances over 12 Hours")
+```
+
+```{r}
+# Need to convert the ae_clean into a tsibble
+
+ae_tsibble <- ae_clean %>%
+  tsibble(key = NULL, index = date)
+
+# Cannot make into a tsibble as there are duplicate entries for time and cannot collapse the data.
+```
+
+# Cannot make into a tsibble
+
+# Attendance Over 12 Hours per Year
+
+```{r}
+ae_clean %>%
+      mutate(moving_avg = slide_dbl(
+        .x = attendance_greater12hrs,
+        .f = ~ mean(., na.rm = TRUE),
+        .before = 12,
+        .after = 12)) %>% 
+  filter(year_month >= "Jan 2016" & department_type == "Emergency Department") %>%
+  group_by(year_month) %>%
+  summarise(num_attendance = sum(attendance_greater12hrs, na.rm = TRUE)) %>%
+  ggplot(aes(x = month(year_month,
+                       label = TRUE,
+                       abbr = TRUE),
+             y = num_attendance,
+         group = factor(year(year_month)),
+         colour = factor(year(year_month))
+         )) +
+  geom_line() +
+  geom_point() +
+  labs(x = "Month",
+       y = "Attendance Over 12 Hours",
+       colour = "Year") +
+  theme_classic()
+```
+
+# Attendance Over 8 Hours per Year
+
+```{r}
+ae_clean %>%
+  filter(year_month >= "Jan 2016") %>%
+  group_by(year_month) %>%
+  summarise(num_attendance = sum(attendance_greater8hrs, na.rm = TRUE)) %>%
+  ggplot(aes(x = month(year_month,
+                       label = TRUE,
+                       abbr = TRUE),
+             y = num_attendance,
+         group = factor(year(year_month)),
+         colour = factor(year(year_month))
+         )) +
+  geom_line() +
+  geom_point() +
+  labs(x = "Month",
+       y = "Attendance Over 8 Hours",
+       colour = "Year") +
+  theme_classic()
+
+```
+
+
+
+
+## To Do List
+
+### - Clean the data fully (Date)
+### - Wrangle the data to spot trends and patterns
+### - Plot Spatial Map
+### - z qf
+
+
+
+
+
+
+
+
+
+
+
+
+# Spatial Map
+
+```{r}
+library(sf)
+library(rgdal)
+library(raster)
+library(ggplot2)
+library(rgeos)
+library(mapview)
+library(leaflet)
+library(broom) # if you plot with ggplot and need to turn sp data into dataframes
+options(stringsAsFactors = FALSE)
+
+# Code Chunk did not work
+
+# healthboard_shapefile <- readOGR(dsn = "NHS_healthboard_shapefiles_simple/",
+#                                  layer = "NHS_HealthBoards_2019",
+#                                  GDAL1_integer64_policy = TRUE)
+
+shapes <- read_sf(dsn = "NHS_healthboard_shapefiles_simple/SG_NHS_HealthBoards_2019", layer = "SG_NHS_HealthBoards_2019")
+
+```
+
+

@@ -1,0 +1,102 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+Use this file to test all the plots and stats. Feel free to do that too. We'll add it to gitignore later.
+
+```{r}
+# All of Scotland, all months
+occupancy_resample <- clean_beds %>%
+  filter(hb == "S92000003") %>% 
+  specify(response = percentage_occupancy) %>%
+  generate(reps = 10000, type = "bootstrap") %>%
+  calculate(stat = "mean")
+
+occupancy_ci <- occupancy_resample %>%
+  get_confidence_interval(level = 0.95, type = "percentile")
+
+occupancy_resample %>%
+  visualise(bins = 30) +
+  shade_confidence_interval(endpoints = occupancy_ci)
+```
+
+```{r}
+# All of Scotland, winter quarters
+occupancy_resample <- clean_beds %>%
+  filter(hb == "S92000003", winter_flag == "yes") %>% 
+  specify(response = percentage_occupancy) %>%
+  generate(reps = 10000, type = "bootstrap") %>%
+  calculate(stat = "mean")
+
+occupancy_ci <- occupancy_resample %>%
+  get_confidence_interval(level = 0.95, type = "percentile")
+
+occupancy_resample %>%
+  visualise(bins = 30) +
+  shade_confidence_interval(endpoints = occupancy_ci) +
+  shade_pvalue(mean(clean_beds$percentage_occupancy), direction = "none")
+```
+
+
+
+
+# A&E Attendance
+
+```{r include = F}
+ae <- read_csv("raw_data/ane_activity.csv") %>% clean_names() %>% 
+  mutate(date = ym(month),
+         year = year(date),
+         month = month(date))
+```
+
+```{r}
+ae %>%
+  filter(year > 2017) %>%
+  group_by(month, year) %>%
+  summarise(attendance = sum(attendance_greater8hrs, na.rm = T)) %>% 
+  ggplot(aes(month, attendance, fill = factor(year), col = factor(year))) +
+  geom_point() +
+  geom_line()
+```
+
+```{r}
+ae_stats <- ae %>%
+  filter(year > 2007, department_type == "Emergency Department") %>% 
+  group_by(month, year) %>%
+  summarise(attendance = sum(attendance_greater8hrs, na.rm = T)) %>% 
+  mutate(winter_flag = case_when(month %in% c(1, 2, 3, 10, 11, 12) ~ "Yes",
+                            TRUE ~ "No")) %>%
+  group_by(winter_flag, year) %>% 
+  summarise(av_attendance = mean(attendance)) %>% 
+  arrange(year)
+
+ae_stats
+```
+
+```{r}
+ae_stats %>% 
+  mutate(av_attendance = if_else(
+    winter_flag == "No", -av_attendance, av_attendance)) %>% 
+  group_by(year) %>% 
+  summarise(diff_av = sum(av_attendance)) %>% 
+  ggplot(aes(year, diff_av)) +
+  geom_point() +
+  xlim(2008, 2020)
+```
+The A&E wait times are getting worse every winter compared to the respective summer.
+
+
+```{r}
+
+```
+
+
+
+```{r}
+ae %>%
+  group_by(date, hbt) %>% 
+  summarise(attendance = sum (number_of_attendances_aggregate)) %>% 
+  ggplot(aes(date, attendance)) +
+  geom_line()
+```
+
