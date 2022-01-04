@@ -12,11 +12,16 @@ server <- function(input, output) {
       theme(legend.position="none")
   })
     
-    output$cardio_plot <- renderPlot({
-      activity_specialty %>%
-        filter(specialty_name == "Cardiology") %>%
-        ggplot(aes(quarter)) +
-        geom_histogram(stat = "count") 
+    output$admissions_episodes_plot <- renderPlot({
+      clean_admissions %>%  
+        filter(hb %in% "Scotland",
+               specialty_name %in% "Infectious Diseases",
+               admission_type %in% c("Elective Inpatients", 
+                                     "Emergency Inpatients", 
+                                     "Transfers")) %>% 
+        ggplot(aes(x = date, y = episodes, col = admission_type)) +
+        geom_point() +
+        geom_line()
   })
     
     # eventReactive(input$applyButton

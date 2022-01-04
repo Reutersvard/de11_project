@@ -66,7 +66,7 @@ body <- dashboardBody(
                         # creates the element for the main row, second half - (this is a placeholder plot)
                         column(width = 6,
                                br(),
-                               plotOutput("cardio_plot")
+                               plotOutput("admissions_episodes_plot")
                               )
                 ),
           ),
