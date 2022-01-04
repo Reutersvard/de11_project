@@ -151,17 +151,22 @@ body <- dashboardBody(
               mainPanel(
 
                 # create the element for the right column -(this is a placeholder plot)
-                fluidRow(column(width = 8,
+                fluidRow(column(width = 5,
                                 br(),
                                 plotOutput("neurology_plot"),
-                                br(),
-                                br(),
-                                br(),
-
+                                
                                 # create the bottom right box with text description
                                 textOutput("ae_text_placeholder")
-                                ),
-                        ),
+                              ),
+                         
+                         column(width = 5,
+                                br(),
+                                plotOutput("urology_plot"),
+                                
+                                # create the bottom right box with text description
+                                # textOutput("ae_text_placeholder")
+                                )
+                          )
                       )
               )
 
