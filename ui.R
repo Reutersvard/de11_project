@@ -126,12 +126,15 @@ body <- dashboardBody(
             # create the element for the left column
             sidebarLayout(
 
-              # creates the sidebar panel
+              # creates the sidebar panel with the date, age and dept selection
               sidebarPanel(
                 numericInput("age_range_1", "Age",
                              value = 1, min = 1, max = 100),
+                
+                radioButtons("dept_type", "Department Type",
+                             choices = c("Accident and Emergency",
+                                        "Minor Injuries")),
 
-                # create the left box with date selection
                 sliderInput("date_range", label = "Date Range",
                             min = as.Date("2016-01-01","%Y-%m-%d"),
                             max = as.Date("2021-12-31","%Y-%m-%d"),
@@ -157,8 +160,8 @@ body <- dashboardBody(
 
                                 # create the bottom right box with text description
                                 textOutput("ae_text_placeholder")
-                                )
-                        )
+                                ),
+                        ),
                       )
               )
 

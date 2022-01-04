@@ -37,6 +37,14 @@ server <- function(input, output) {
         geom_histogram(stat = "count") 
     })
 
+    output$urology_plot <- renderPlot({
+      activity_specialty %>%
+        filter(specialty_name == "Urology") %>%
+        ggplot(aes(quarter)) +
+        geom_histogram(stat = "count") 
+    })  
+    
+    
     output$ae_text_placeholder <- renderText({
       print("this is a placeholder text for the description of the plot in the A&E tab")
     })
