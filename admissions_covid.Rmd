@@ -1,0 +1,74 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+library(janitor)
+library(lubridate)
+```
+
+```{r}
+admissions_agesex <- read_csv("raw_data/hospital_admissions_hb_agesex_20211201.csv") %>%
+  clean_names() %>%
+  mutate(hb_name = case_when(
+                  str_detect(hb, "15") ~ "Ayrshire and Arran",
+                  str_detect(hb, "16") ~ "Borders",
+                  str_detect(hb, "17") ~ "Dumfries and Galloway",
+                  str_detect(hb, "19") ~ "Forth Valley",
+                  str_detect(hb, "020") ~ "Grampian",
+                  str_detect(hb, "22") ~ "Highland",
+                  str_detect(hb, "24") ~ "Lothian",
+                  str_detect(hb, "25") ~ "Orkney",
+                  str_detect(hb, "26") ~ "Shetland",
+                  str_detect(hb, "28") ~ "Western Isles",
+                  str_detect(hb, "29") ~ "Fife",
+                  str_detect(hb, "30") ~ "Tayside",
+                  str_detect(hb, "31") ~ "Greater Glasgow and Clyde",
+                  str_detect(hb, "32") ~ "Lanarkshire",
+                  str_detect(hb, "92") ~ "Scotland"),
+         week_ending = ymd(week_ending)
+  )
+admissions_agesex <- admissions_agesex[, c(1, 2, 13, 3:12)]
+```
+
+
+
+```{r}
+admissions_agesex %>%
+  filter(hbqf == "d")
+```
+
+```{r}
+colnames(admissions_agesex)
+```
+
+```{r}
+admissions_agesex %>%
+  filter(age_group == "All ages",
+         hb_name == "Scotland",
+         sex == "All") %>%
+  ggplot(aes(week_ending, percent_variation)) +
+  geom_line() +
+  geom_point()
+```
+
+```{r}
+admissions_agesex %>%
+  filter(age_group == "All ages",
+         hb_name == "Scotland",
+         sex == "All") %>%
+  select(week_ending, percent_variation)
+```
+
+
+
+```{r}
+admissions_agesex %>%
+  filter(hb_name == "Scotland",
+         age_group != "All ages") %>%
+  ggplot(aes(week_ending, percent_variation)) +
+  geom_line() +
+  facet_wrap(~age_group)
+```
+
