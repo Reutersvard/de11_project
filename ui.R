@@ -58,15 +58,15 @@ body <- dashboardBody(
                      ),
 
               # creates the element for the main row, first half (this is a placeholder plot)
-              fluidRow(column(width = 6,
+              fluidRow(column(width = 5,
                               br(),
-                              plotOutput("cardio_plot")
+                              plotOutput("beds_percentage_plot")
                               ),
 
                         # creates the element for the main row, second half - (this is a placeholder plot)
                         column(width = 6,
                                br(),
-                               plotOutput("icu_plot")
+                               plotOutput("cardio_plot")
                               )
                 ),
           ),

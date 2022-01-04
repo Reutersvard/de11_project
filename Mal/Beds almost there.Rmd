@@ -186,6 +186,18 @@ wranged_beds_no_gj %>%
   theme(legend.position="none")
 ```
 
+```{r}
+clean_beds_specialty_data %>% 
+  filter(specialty_name %in% c("All Acute", "All Specialties"),
+         hb != "Scotland") %>%
+  ggplot(aes(x = date, y = percentage_occupancy, col = specialty_name)) +
+  geom_point() +
+  geom_line() +
+  facet_wrap(~ hb) +
+  theme(legend.position="none")
+
+
+```
 
 
 
