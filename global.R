@@ -11,7 +11,6 @@ library(infer)
 library(lubridate)
 library(shinydashboard)
 
-
 # Source scripts & read clean data ----------------------------------------
 
 source("scripts/clean_data.R")

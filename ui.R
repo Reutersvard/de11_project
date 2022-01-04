@@ -12,7 +12,8 @@ sidebar <- dashboardSidebar(
                   max = as.Date("2021-12-31","%Y-%m-%d"),
                   value = c(as.Date("2016-01-01"),
                             as.Date("2021-12-31")),
-                  timeFormat="%Y-%m-%d",
+                  timeFormat="%Y-%m",
+                  width = "85%",
                   step = 90),
       actionButton("applyButton",
                    "Apply Changes")
@@ -205,6 +206,9 @@ body <- dashboardBody(
 # Main dashboard and CSS -------------------------------------------------------
 dashboardPage(skin = "purple",
   dashboardHeader(title = "PHS Project"),
-    sidebar,
-    body
+  sidebar,
+  body,
+  tags$head(
+    tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
+  )
 )
