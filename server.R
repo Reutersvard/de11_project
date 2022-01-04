@@ -15,8 +15,11 @@ server <- function(input, output) {
         geom_histogram(stat = "count") 
   })
     
+<<<<<<< HEAD
     # eventReactive(input$applyButton
     
+=======
+>>>>>>> b00e9103c7a6552cf493422e134700946a58237c
 # placeholder input for the ICU tab --------------------------------------------
     output$dermatology_plot <- renderPlot({
       activity_specialty %>%
@@ -41,8 +44,14 @@ server <- function(input, output) {
       print("this is a placeholder text for the description of the plot in the A&E tab")
     })
 
+<<<<<<< HEAD
 # placeholder input for Stats tab ----------------------------------------------
     
+=======
+
+# Statistics plots --------------------------------------------------------
+  
+>>>>>>> b00e9103c7a6552cf493422e134700946a58237c
     output$some_plot <- renderPlot({
       clean_beds %>% 
         filter(hb == "S92000003") %>% 
@@ -63,6 +72,10 @@ server <- function(input, output) {
     output$null_plot <- renderPlot({
       clean_beds %>% 
         filter(hb == "S92000003") %>%
+<<<<<<< HEAD
+=======
+        mutate(winter_flag = if_else(str_detect(quarter, "Q1") | str_detect(quarter, "Q4"), "yes", "no")) %>% 
+>>>>>>> b00e9103c7a6552cf493422e134700946a58237c
         specify(percentage_occupancy ~ winter_flag) %>% 
         hypothesise(null = "independence") %>% 
         generate(reps = 10000, type = "permute") %>% 
@@ -74,5 +87,9 @@ server <- function(input, output) {
     output$stat_text <- renderText({
       print("A discussion of the p-value etc here")
     })  
+<<<<<<< HEAD
       
+=======
+    
+>>>>>>> b00e9103c7a6552cf493422e134700946a58237c
 }

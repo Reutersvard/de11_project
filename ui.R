@@ -20,6 +20,7 @@ ui <- dashboardPage( skin = "purple",
                              br(),
                              numericInput("age_range_1", "Age Choice",
                                           value = 1, min = 1, max = 100),
+<<<<<<< HEAD
                              )),
                       box(column(width = 3,
                              br(),
@@ -36,12 +37,23 @@ ui <- dashboardPage( skin = "purple",
                              br(),
                              actionButton("applyButton",
                                           "Apply Changes")
+=======
+                             ),
+                      column(width = 4,
+                             dateRangeInput("date_range_1", "Date Range",
+                                            start = "2016-01-01",
+                                            end = "2022-01-01"
+                                            )
+>>>>>>> b00e9103c7a6552cf493422e134700946a58237c
                              )
                     )),
              
              # creates the element for the main row, first half (this is a placeholder plot)
              fluidRow(column(width = 6,
+<<<<<<< HEAD
                              br(),
+=======
+>>>>>>> b00e9103c7a6552cf493422e134700946a58237c
                              plotOutput("cardio_plot")
                              ),
                       
@@ -56,6 +68,7 @@ ui <- dashboardPage( skin = "purple",
 # ICU tab ----------------------------------------------------------------------
     # creates the navigation for ICU tab
     tabPanel("ICU",
+<<<<<<< HEAD
              
              # creates a space between the top bar and the main page
              br(),
@@ -152,6 +165,67 @@ tabPanel("A&E",
 # Statistics tab ---------------------------------------------------------------
     # creates the navigation for statistics tab
 tabPanel("Statistics",
+=======
+             
+             # create the element for the left column
+             fluidRow(column(width = 4,
+                             numericInput("age_range_1", "Age Choice",
+                                          value = 1, min = 1, max = 100),
+                             ),
+                      
+              # create the element for the right column -(this is a placeholder plot)
+                      column(width = 8,
+                             plotOutput("dermatology_plot")
+                             )
+                      ),
+             
+             # create the left box with date selection
+             fluidRow(column(width = 4, 
+                             dateRangeInput("date_range_1", "Date Range",
+                                            start = "2016-01-01",
+                                            end = "2022-01-01")
+                             ),
+                      
+              # create the bottom right box with text description
+                      column(width = 8,
+                             textOutput("icu_text_placeholder")
+                             )
+             ),
+    ),
+
+# A&E tab ----------------------------------------------------------------------
+    # creates the navigation for A&E tab
+    tabPanel("A&E",
+             
+             # create the element for the left column
+             fluidRow(column(width = 4,
+                             numericInput("age_range_1", "Age Choice",
+                                          value = 1, min = 1, max = 100),
+             ),
+             
+             # create the element for the right column - this is a placeholder plot
+             column(width = 8,
+                    plotOutput("neurology_plot")
+                  )
+             ),
+             
+             # create the left box with date selection
+             fluidRow(column(width = 4, 
+                             dateRangeInput("date_range_1", "Date Range",
+                                            start = "2016-01-01",
+                                            end = "2022-01-01")
+                            ),
+                      
+              # create the bottom right box with text description
+                      column(width = 8,
+                            textOutput("ae_text_placeholder")
+                            )
+                      )
+             ),
+
+# Statistics tab ---------------------------------------------------------------
+    tabPanel("Statistics",
+>>>>>>> b00e9103c7a6552cf493422e134700946a58237c
          
          # create the element for the left column
          fluidRow(
@@ -159,11 +233,19 @@ tabPanel("Statistics",
                   radioButtons("plot_input",
                                "Select plot type",
                                choices = c("Box plot", "Histogram"))
+<<<<<<< HEAD
            ),
            
            # this is a placeholder plot
            column(width = 8,
                   plotOutput("some_plot"))
+=======
+                  ),
+         
+            # this is a placeholder plot
+            column(width = 8,
+                plotOutput("some_plot"))
+>>>>>>> b00e9103c7a6552cf493422e134700946a58237c
          ),
          
          # create the left box with date selection
@@ -172,6 +254,7 @@ tabPanel("Statistics",
                   radioButtons("variable_input",
                                "Analysis on which variable?",
                                choices = c("ICU", "A&E"))
+<<<<<<< HEAD
            ),
            
            # this is a placeholder plot
@@ -187,3 +270,18 @@ tabPanel("Statistics",
     ),          
   )
 )
+=======
+                  ),
+         
+          # this is a placeholder plot
+           column(width = 8,
+                  plotOutput("null_plot")) 
+           
+          ),
+
+         fluidRow(  # create the bottom right box with text description
+           column(width = 8,
+                  textOutput("stat_text")))
+    )
+))
+>>>>>>> b00e9103c7a6552cf493422e134700946a58237c
