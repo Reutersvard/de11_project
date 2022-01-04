@@ -1,14 +1,13 @@
 # Libraries ---------------------------------------------------------------
 
 library(shiny)
+library(janitor)
 library(tidyverse)
 library(leaflet)
 library(tsibble)
-library(janitor)
 library(shinythemes) # Themes maybe?
 library(ggthemes)
 library(infer)
-library(lubridate)
 library(shinydashboard)
 library(tsibbledata)
 library(fable)
@@ -17,6 +16,7 @@ library(feasts)
 library(tidyquant)
 library(sf)
 library(rgdal)
+library(lubridate)
 
 # Source scripts & read clean data ----------------------------------------
 

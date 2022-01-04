@@ -32,15 +32,15 @@ server <- function(input, output) {
 # placeholder input for the A&E tab --------------------------------------------
     output$ae_emergency_plot <- renderPlot ({
       clean_ae %>%
-        filter(department_type == "Emergency Department") %>%
-        group_by(date) %>%
+        filter(year_month >= "Jan 2016" & department_type == "Emergency Department") %>%
+        group_by(year_month) %>%
         summarise(num_attendance = sum(attendance_greater12hrs, na.rm = TRUE)) %>%
-        ggplot(aes(x = month(date,
+        ggplot(aes(x = month(year_month,
                              label = TRUE,
                              abbr = TRUE),
                    y = num_attendance,
-                   group = factor(year(date)),
-                   colour = factor(year(date))
+                   group = factor(year(year_month)),
+                   colour = factor(year(year_month))
         )) +
         geom_line() +
         geom_point() +

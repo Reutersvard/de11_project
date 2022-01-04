@@ -180,10 +180,10 @@ ae_tsibble <- ae_clean %>%
 # Attendance Over 12 Hours per Year
 
 ```{r}
-ae_clean <- ae_clean %>%
-  mutate(year_month = as.yearmon(ae_clean$date))
+clean_ae <- ae %>%
+  mutate(year_month = as.yearmon(ae$date))
 
-ae_clean %>%
+clean_ae %>%
   filter(year_month >= "Jan 2016" & department_type == "Emergency Department") %>%
   group_by(year_month) %>%
   summarise(num_attendance = sum(attendance_greater12hrs, na.rm = TRUE)) %>%
