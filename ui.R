@@ -7,6 +7,7 @@ sidebar <- dashboardSidebar(
       menuItem("ICU Admissions", tabName = "icu", icon = icon("poll")),
       menuItem("A&E Admissions", tabName = "ae", icon = icon("poll")),
       menuItem("Statistics", tabName = "stats", icon = icon("chart-line")),
+      setSliderColor(c("#7CB342", "#7CB342", "#7CB342", "#7CB342"), c(1, 2, 3, 4)),
       sliderInput("date_range", label = "Date Range",
                   min = as.Date("2016-01-01","%Y-%m-%d"),
                   max = as.Date("2021-12-31","%Y-%m-%d"),
@@ -46,7 +47,7 @@ body <- dashboardBody(
                                               max = as.Date("2021-12-31","%Y-%m-%d"),
                                               value = c(as.Date("2016-01-01"),
                                                         as.Date("2021-12-31")),
-                                              timeFormat="%Y-%m-%d",
+                                              timeFormat="%Y-%m",
                                               step = 90
                                               )
                                   ),
@@ -91,7 +92,7 @@ body <- dashboardBody(
                               max = as.Date("2021-12-31","%Y-%m-%d"),
                               value = c(as.Date("2016-01-01"),
                                         as.Date("2021-12-31")),
-                              timeFormat="%Y-%m-%d",
+                              timeFormat="%Y-%m",
                               step = 90
                   ),
                   actionButton("applyButton",
@@ -140,7 +141,7 @@ body <- dashboardBody(
                             max = as.Date("2021-12-31","%Y-%m-%d"),
                             value = c(as.Date("2016-01-01"),
                                       as.Date("2021-12-31")),
-                            timeFormat="%Y-%m-%d",
+                            timeFormat="%Y-%m",
                             step = 90
                 ),
                 actionButton("applyButton",
