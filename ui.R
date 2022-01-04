@@ -71,7 +71,7 @@ body <- dashboardBody(
                 ),
           ),
 
-    # ICU tab ----------------------------------------------------------
+# ICU tab ----------------------------------------------------------
     tabItem(tabName = "icu",
 
             # creates a space between the top bar and the main page
@@ -153,7 +153,7 @@ body <- dashboardBody(
                 # create the element for the right column -(this is a placeholder plot)
                 fluidRow(column(width = 5,
                                 br(),
-                                plotOutput("neurology_plot"),
+                                plotOutput("ae_emergency_plot"),
                                 
                                 # create the bottom right box with text description
                                 textOutput("ae_text_placeholder")
