@@ -1,17 +1,35 @@
 server <- function(input, output) {
   
 # placeholder input for the overview tab ---------------------------------------
-  output$beds_percentage_plot <- renderPlot({
-    clean_beds_specialty_data %>% 
-      filter(specialty_name %in% c("All Acute", "All Specialties"),
-             hb != "Scotland") %>%
-      ggplot(aes(x = date, y = percentage_occupancy, col = specialty_name)) +
-      geom_point() +
-      geom_line() +
-      facet_wrap(~ hb) +
-      theme(legend.position="none")
+  output$dermatology_plot <- renderPlot({
+    activity_specialty %>%
+      filter(specialty_name == "Dermatology") %>%
+      ggplot(aes(quarter)) +
+      geom_histogram(stat = "count") 
   })
     
+  output$neurology_plot <- renderPlot({
+    activity_specialty %>%
+      filter(specialty_name == "Neurology") %>%
+      ggplot(aes(quarter)) +
+      geom_histogram(stat = "count") 
+  })
+
+    
+    # eventReactive(input$applyButton
+    
+# placeholder input for the COVID tab -------------------------------------------
+    output$beds_percentage_plot <- renderPlot({
+      clean_beds_specialty_data %>% 
+        filter(specialty_name %in% c("All Acute", "All Specialties"),
+               hb != "Scotland") %>%
+        ggplot(aes(x = date, y = percentage_occupancy, col = specialty_name)) +
+        geom_point() +
+        geom_line() +
+        facet_wrap(~ hb) +
+        theme(legend.position="none")
+    })    
+
     output$admissions_episodes_plot <- renderPlot({
       clean_admissions %>%  
         filter(hb %in% "Scotland",
@@ -22,18 +40,8 @@ server <- function(input, output) {
         ggplot(aes(x = date, y = episodes, col = admission_type)) +
         geom_point() +
         geom_line()
-  })
-    
-    # eventReactive(input$applyButton
-    
-# placeholder input for the ICU tab --------------------------------------------
-    output$dermatology_plot <- renderPlot({
-      activity_specialty %>%
-        filter(specialty_name == "Dermatology") %>%
-        ggplot(aes(quarter)) +
-        geom_histogram(stat = "count") 
     })
-
+    
     output$icu_text_placeholder <- renderText({
       print("this is a placeholder text for the description of the plot in the ICU tab")
     })

@@ -4,7 +4,7 @@
 sidebar <- dashboardSidebar(
     sidebarMenu(
       menuItem("Overview", tabName = "overview", icon = icon("columns")),
-      menuItem("COVID Insights", tabName = "covid", icon = icon("laptop-medical")),
+      menuItem("COVID Insights", tabName = "covid", icon = icon("virus")),
       menuItem("A&E Admissions", tabName = "ae", icon = icon("chart-bar")),
       menuItem("Statistics", tabName = "stats", icon = icon("chart-line")),
       setSliderColor(c("#7CB342", "#7CB342", "#7CB342", "#7CB342"), c(1, 2, 3, 4)),
@@ -61,13 +61,13 @@ body <- dashboardBody(
               # creates the element for the main row, first half (this is a placeholder plot)
               fluidRow(column(width = 5,
                               br(),
-                              plotOutput("beds_percentage_plot")
+                              plotOutput("dermatology_plot")
                               ),
 
                         # creates the element for the main row, second half - (this is a placeholder plot)
                         column(width = 6,
                                br(),
-                               plotOutput("admissions_episodes_plot")
+                               plotOutput("neurology_plot")
                               )
                 ),
           ),
@@ -103,20 +103,24 @@ body <- dashboardBody(
                 mainPanel(
 
                   # create the element for the right column -(this is a placeholder plot)
-                  fluidRow(column(width = 8,
+                  fluidRow(column(width = 5,
                                   br(),
-                                  plotOutput("dermatology_plot"),
+                                  plotOutput("beds_percentage_plot"),
                                   br(),
                                   br(),
                                   br(),
-
+                                  
                                   # create the bottom right box with text description
-                                  textOutput("icu_text_placeholder")
-                                  )
+                                  textOutput("icu_text_placeholder"),
+                                ),
+                           column(width = 5,
+                                  br(),
+                                  plotOutput("admissions_episodes_plot")
                           )
                         )
                     )
-              ),
+              )
+    ),
 
 # A&E tab-----------------------------------------------------------
     tabItem(tabName = "ae",
