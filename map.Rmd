@@ -1,0 +1,125 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(sf)
+library(rgdal)
+library(janitor)
+library(lubridate)
+library(leaflet)
+```
+
+```{r}
+beds <- read_csv("raw_data/beds_specialty.csv")
+
+```
+
+
+```{r}
+clean_beds_hbcode <- beds %>% 
+  clean_names() %>% 
+  mutate(q = str_sub(quarter, -2)) %>% 
+  # Change to date format
+  mutate(quarter = yq(quarter)) %>% 
+  # rename the columns above 
+  mutate(date = quarter,
+         quarter = q) %>% 
+  mutate(location = if_else(location %in% "SB0801", "Golden Jubilee",
+                      if_else(location %in% "S08000015", "Ayrshire & Arran",
+                      if_else(location %in% "S08000016", "Borders",
+                      if_else(location %in% "S08000017", "Dumfries & Galloway",
+                      if_else(location %in% "S08000019", "Forth Valley",
+                      if_else(location %in% "S08000020", "Grampian",
+                      if_else(location %in% "S08000022", "Highland",
+                      if_else(location %in% "S08000024", "Lothian",
+                      if_else(location %in% "S08000025", "Orkney",
+                      if_else(location %in% "S08000026", "Shetland",
+                      if_else(location %in% "S08000028", "Western Isles",
+                      if_else(location %in% "S08000029", "Fife",
+                      if_else(location %in% "S08000030", "Tayside",
+                      if_else(location %in% "S08000031", "Greater Glasgow & Clyde",
+                      if_else(location %in% "S08000032", "Lanarkshire",
+                      if_else(location %in% "S92000003", "Scotland", NA_character_ 
+                            #  if_else(location %in% "^[A-Z0-9]{5}", , location)
+                      ))))))))))))))))) %>% 
+  filter(location != is.na(location)) %>% 
+  # take out unused columns
+  # take out location to remove duplicate
+  select(date, quarter, hb, specialty_name, all_staffed_beds, 
+         total_occupied_beds, average_available_staffed_beds,
+         average_occupied_beds, percentage_occupancy) %>%
+    rename(hb_name = hb)
+```
+
+## made acute_only just to try and plot on map to see if it would work
+
+```{r}
+acute_only <- clean_beds_hbcode %>%
+  filter(specialty_name == "All Acute",
+         date == "2018-01-01",
+         hb_name != "SB0801",
+         hb_name != "S92000003") %>%
+  rename(hb_code = hb_name)
+```
+
+
+## read in shape file
+```{r}
+hb_shapes <- st_read("SG_NHS_HealthBoards_2019/SG_NHS_HealthBoards_2019.shp")
+```
+
+## reduce the size of the shape file as it's quite big and takes forever to run
+```{r}
+simplified <- rmapshaper::ms_simplify(hb_shapes)
+```
+
+## Chris helped me with this, adds location/coordinates for the polygon shapes so R knows where to plot them on map, gave it a new name incase I messed it up
+```{r}
+simplified_2 <- st_transform(simplified,"CRS:84") %>%
+  clean_names()
+```
+
+## Merged shapefile with df, was a pointer from Chris (Think Jonny said David didn't do that for his proj so maybe there's a better way)
+
+```{r}
+merged <- sp::merge(simplified_2, acute_only)
+```
+
+
+```{r}
+  leaflet() %>%
+    setView(lng = -5, lat = 57.35, zoom = 6) %>%
+    # setMaxBounds(lng1 = -0.7,
+    #              lat1 = 54.6,
+    #              lng2 = -8.8,
+    #              lat2 = 60.9) %>%
+    addTiles() %>%
+    addPolygons(data = simplified_2,
+                fillColor = ~colorQuantile("Reds",merged$percentage_occupancy)(merged$percentage_occupancy),
+                fillOpacity = 0.6,
+                color = "darkgrey",      
+                weight = 1.5)
+```
+
+
+
+## Just an initial map I done to check if the regions are on the map
+
+```{r}
+  leaflet() %>%
+    setView(lng = -5, lat = 57.65, zoom = 5.7) %>%
+    # setMaxBounds(lng1 = -0.7,
+    #              lat1 = 54.6,
+    #              lng2 = -8.8,
+    #              lat2 = 60.9) %>%
+    addTiles() %>%
+    addPolygons(data = simplified_2,
+                color = "green")
+```
+
+
+
+
