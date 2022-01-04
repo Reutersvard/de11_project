@@ -19,9 +19,9 @@ rm(beds_specialty, clean_beds)
 # A&E cleaning script ----------------------------
 ae <- read_csv("raw_data/monthly_ae_waitingtimes_202110.csv")
 
-clean_ae <- ae %>%
-  clean_names() %>%
+clean_ae <- ae <- read_csv("raw_data/ane_activity.csv") %>% clean_names() %>% 
   mutate(date = ym(month),
-         year_month = as.yearmon(date))
+         year = year(date),
+         month = month(date))
 
 write_csv(clean_ae, "clean_data/clean_ae.csv")
