@@ -135,13 +135,14 @@ body <- dashboardBody(
                 radioButtons("department_type", "Department Type",
                              choices = unique(clean_ae$department_type)),
 
-                sliderInput("date_range", label = "Date Range",
-                            min = as.Date("2016-01-01","%Y-%m-%d"),
-                            max = as.Date("2021-12-31","%Y-%m-%d"),
-                            value = c(as.Date("2016-01-01"),
-                                      as.Date("2021-12-31")),
-                            timeFormat="%Y-%m",
-                            step = 91.25, ticks = FALSE
+                sliderInput("ae_date_range", label = "Date Range",
+                            min = as.Date("2007-07-01","%Y-%m-%d"),
+                            max = as.Date("2021-10-01","%Y-%m-%d"),
+                            value = c(as.Date("2007-07-01"),
+                                      as.Date("2021-10-01")),
+                            timeFormat = "%Y-%m",
+                            step = 91.25,
+                            ticks = FALSE
                 ),
                 actionButton("update",
                              "Plot")
