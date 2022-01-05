@@ -116,7 +116,7 @@ server <- function(input, output) {
   
   # placeholder plot
   output$dermatology_plot <- renderPlot({
-    activity_specialty %>%
+    clean_beds %>%
       filter(specialty_name == "Dermatology") %>%
       ggplot(aes(quarter)) +
       geom_histogram(stat = "count")
@@ -125,17 +125,19 @@ server <- function(input, output) {
   
   # placeholder text field
   output$icu_text_placeholder <- renderText({
-    print("this is a placeholder text for the description of the plot in the ICU tab")
+    print("this is placeholder text for the description of the plot in the COVID tab")
   })
   
-  # A&E tab --------------------------------------------
+  # A&E tab --------------------------------------------------------------------
   
+  # action button
   date_react <- reactive({
     seq(input$ae_date_range[1],
         input$ae_date_range[2],
         by = 1)
   })
   
+  # interactivity for buttons
   filtered_clean_ae <- eventReactive(input$update_ae_button, {
     clean_ae %>%
       select(date, month, year, hbt, department_type, var = input$selecty) %>%
@@ -143,6 +145,7 @@ server <- function(input, output) {
       filter(date %in% date_react())
   })
   
+  # a&e_emergency_plot - final plot
   output$ae_emergency_plot <- renderPlot ({
     filtered_clean_ae() %>%
       group_by(month, year) %>%
@@ -156,6 +159,7 @@ server <- function(input, output) {
       theme_classic()
   })
   
+  # a&e_stats_plot - final plot
   output$ae_stats_plot <- renderPlot({
     filtered_clean_ae() %>%
       group_by(month, year) %>%
@@ -175,10 +179,10 @@ server <- function(input, output) {
   
   # placeholder text
   output$ae_text_placeholder <- renderText({
-    print("this is a placeholder text for the description of the plot in the A&E tab")
+    print("this is placeholder text for the description of the plot in the A&E tab")
   })
   
-  # Demographics tab ---------------------------------------------------------------
+  # Demographics tab -----------------------------------------------------------
   
   # placeholder plot
   output$neurology_plot <- renderPlot({

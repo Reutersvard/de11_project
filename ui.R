@@ -3,10 +3,10 @@
 # sidebar menu -----------------------------------------------------
 sidebar <- dashboardSidebar(
   sidebarMenu(
-    menuItem("Overview", tabName = "overview", icon = icon("columns")),
+    menuItem("Overview", tabName = "overview", icon = icon("globe")),
     menuItem("COVID Insights", tabName = "covid", icon = icon("virus")),
-    menuItem("A&E Admissions", tabName = "ae", icon = icon("chart-bar")),
-    menuItem("Demographics", tabName = "demo", icon = icon("chart-line")),
+    menuItem("A&E Admissions", tabName = "ae", icon = icon("chart-line")),
+    menuItem("Demographics", tabName = "demo", icon = icon("poll")),
     setSliderColor(c("#7CB342", "#7CB342", "#7CB342", "#7CB342"), c(1, 2, 3, 4)),
     sliderInput("date_range", label = "Date Range",
                 min = as.Date("2016-01-01","%Y-%m-%d"),
@@ -25,7 +25,7 @@ sidebar <- dashboardSidebar(
 body <- dashboardBody(
   tabItems(
     
-    # Overview tab ----------------------------------------------------------------
+    # Overview tab -------------------------------------------------------------
     tabItem(tabName = "overview",
             
             # space between the top bar and the main page
@@ -60,7 +60,7 @@ body <- dashboardBody(
                             leafletOutput("map_winter")
             ),
             
-            # creates the element for the main row, second half - (this is a placeholder plot)
+            # creates the element for the main row, second half - this is a placeholder plot
             column(width = 6,
                    br(),
                    leafletOutput("map_summer")
@@ -68,7 +68,7 @@ body <- dashboardBody(
             ),
     ),
     
-    # COVID tab ----------------------------------------------------------
+    # COVID tab ----------------------------------------------------------------
     tabItem(tabName = "covid",
             
             # space between the top bar and the main page
@@ -113,7 +113,7 @@ body <- dashboardBody(
             # element for the main row, first half - placeholder plot
             fluidRow(column(width = 5,
                             br(),
-                            plotOutput(""),
+                            plotOutput("dermatology_plot"),
                             
                             # bottom right box with text description
                             textOutput("icu_text_placeholder"),
@@ -127,7 +127,7 @@ body <- dashboardBody(
             ),
     ),
     
-    # A&E tab-----------------------------------------------------------
+    # A&E tab ------------------------------------------------------------------
     tabItem(tabName = "ae",
             
             # space between the top bar and the main page
@@ -168,7 +168,6 @@ body <- dashboardBody(
                             
                             # create the bottom right box with text description
                             textOutput("ae_text_placeholder")),
-                     
                      # creates the element for the main row, second half - (this is a placeholder plot)
                      column(width = 6,
                             br(),
@@ -177,19 +176,18 @@ body <- dashboardBody(
             )
     ),
     
-    # Demographics tab -----------------------------------------------------------
+    # Demographics tab ---------------------------------------------------------
     
     # navigation for demographics tab
     tabItem(tabName = "demo",
             
             # element for the left column
             br(),
-            fluidRow(
-              column(width = 4,
+            fluidRow(column(width = 4,
                      radioButtons("plot_input",
                                   "Select plot type",
                                   choices = c("Box plot", "Histogram"))
-              ),
+                    ),
               
               # this is a placeholder plot
               column(width = 8,
