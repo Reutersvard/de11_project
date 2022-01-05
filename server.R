@@ -31,7 +31,7 @@ server <- function(input, output) {
   })
   
   # Action button 
-  action_but <- eventReactive(input$update,{
+  action_but <- eventReactive(input$update, ignoreNULL = FALSE, {
     clean_admissions %>% 
       filter(date %in% quart(),
              specialty_name %in% input$specialty_input,
