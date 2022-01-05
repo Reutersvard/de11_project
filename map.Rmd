@@ -3,7 +3,7 @@ title: "R Notebook"
 output: html_notebook
 ---
 
-```{r}
+```{r include = F}
 library(tidyverse)
 library(sf)
 library(rgdal)
@@ -12,14 +12,12 @@ library(lubridate)
 library(leaflet)
 ```
 
-```{r}
+```{r include = F}
 beds <- read_csv("raw_data/beds_specialty.csv")
-
 ```
 
-
 ```{r}
-clean_beds_hbcode <- beds %>% 
+clean_beds <- beds %>% 
   clean_names() %>% 
   mutate(q = str_sub(quarter, -2)) %>% 
   # Change to date format
@@ -52,74 +50,55 @@ clean_beds_hbcode <- beds %>%
          total_occupied_beds, average_available_staffed_beds,
          average_occupied_beds, percentage_occupancy) %>%
     rename(hb_name = hb)
+rm(beds)
 ```
 
-## made acute_only just to try and plot on map to see if it would work
-
 ```{r}
-acute_only <- clean_beds_hbcode %>%
-  filter(specialty_name == "All Acute",
+filtered_beds <- clean_beds %>%
+  filter(specialty_name == "Accident & Emergency",
          date == "2018-01-01",
          hb_name != "SB0801",
          hb_name != "S92000003") %>%
   rename(hb_code = hb_name)
 ```
 
-
-## read in shape file
 ```{r}
-hb_shapes <- st_read("SG_NHS_HealthBoards_2019/SG_NHS_HealthBoards_2019.shp")
-```
-
-## reduce the size of the shape file as it's quite big and takes forever to run
-```{r}
-simplified <- rmapshaper::ms_simplify(hb_shapes)
-```
-
-## Chris helped me with this, adds location/coordinates for the polygon shapes so R knows where to plot them on map, gave it a new name incase I messed it up
-```{r}
-simplified_2 <- st_transform(simplified,"CRS:84") %>%
+simplified_shapes <- st_transform(rmapshaper::ms_simplify(st_read(
+  "raw_data/nhs_hb_2019/nhs_hb_2019.shp")),"CRS:84") %>%
   clean_names()
 ```
 
-## Merged shapefile with df, was a pointer from Chris (Think Jonny said David didn't do that for his proj so maybe there's a better way)
-
 ```{r}
-merged <- sp::merge(simplified_2, acute_only)
+merged <- sp::merge(simplified_shapes, filtered_beds) %>% 
+  select(hb_name, percentage_occupancy, geometry)
 ```
 
+```{r warning=FALSE}
+pal <- colorBin("BuPu", domain = merged$percentage_occupancy)
 
-```{r}
+merged %>%
   leaflet() %>%
-    setView(lng = -5, lat = 57.35, zoom = 6) %>%
-    # setMaxBounds(lng1 = -0.7,
-    #              lat1 = 54.6,
-    #              lng2 = -8.8,
-    #              lat2 = 60.9) %>%
-    addTiles() %>%
-    addPolygons(data = simplified_2,
-                fillColor = ~colorQuantile("Reds",merged$percentage_occupancy)(merged$percentage_occupancy),
-                fillOpacity = 0.6,
-                color = "darkgrey",      
-                weight = 1.5)
+  addTiles() %>%
+  addProviderTiles(providers$OpenStreetMap) %>%
+  addPolygons(
+    fillColor = ~ pal(percentage_occupancy),
+    weight = 2,
+    opacity = 1,
+    color = "white",
+    dashArray = "3",
+    fillOpacity = 0.7,
+    highlight = highlightOptions(
+      weight = 5,
+      color = "#666",
+      dashArray = "",
+      fillOpacity = 0.7,
+      bringToFront = TRUE),
+    label = paste(merged$hb_name, ":", round(merged$percentage_occupancy)),
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "15px",
+      direction = "auto")) %>%
+  addLegend("topleft", pal = pal, values = ~percentage_occupancy,
+    title = "Percentage occupancy",
+    opacity = 1)
 ```
-
-
-
-## Just an initial map I done to check if the regions are on the map
-
-```{r}
-  leaflet() %>%
-    setView(lng = -5, lat = 57.65, zoom = 5.7) %>%
-    # setMaxBounds(lng1 = -0.7,
-    #              lat1 = 54.6,
-    #              lng2 = -8.8,
-    #              lat2 = 60.9) %>%
-    addTiles() %>%
-    addPolygons(data = simplified_2,
-                color = "green")
-```
-
-
-
-
