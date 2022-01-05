@@ -32,15 +32,11 @@ body <- dashboardBody(
             br(),
 
             # element for the top row
-            fluidRow(column(width = 3,
+            fluidRow(column(width = 4,
                                   br(),
                                   radioButtons("icu_choice_1", "ICU choice",
                                                choices = c("Yes", "No"))),
-                       column(width = 3,
-                                  br(),
-                                  numericInput("age_range_1", "Age",
-                                               value = 1, min = 1, max = 100)),
-                       column(width = 3,
+                       column(width = 4,
                                   br(),
                                   sliderInput("date_range", label = "Date Range",
                                               min = as.Date("2016-01-01","%Y-%m-%d"),
@@ -51,7 +47,7 @@ body <- dashboardBody(
                                               step = 90
                                               )
                                   ),
-                        column(width = 3,
+                        column(width = 4,
                                   br(),
                                   actionButton("applyButton",
                                                "Apply Changes")
