@@ -44,10 +44,13 @@ server <- function(input, output) {
       seq(input$ae_date_range[1],
           input$ae_date_range[2],
           by = 1)
+      
+      
     })
     
     filtered_clean_ae <- eventReactive(input$update, {
       clean_ae %>%
+      select(date, month, year, hbt, department_type, var = input$selecty) %>%
       filter(department_type == input$department_type) %>%
       filter(date %in% date_react())
     })
@@ -55,7 +58,7 @@ server <- function(input, output) {
     output$ae_emergency_plot <- renderPlot ({
       filtered_clean_ae() %>%
         group_by(month, year) %>%
-        summarise(attendance = sum(attendance_greater8hrs, na.rm = T)) %>% 
+        summarise(attendance = sum(var, na.rm = TRUE)) %>% 
         ggplot(aes(month, attendance, col = factor(year))) +
         geom_point() +
         geom_line() +
@@ -67,9 +70,8 @@ server <- function(input, output) {
 
     output$ae_stats_plot <- renderPlot({
       filtered_clean_ae() %>%
-        filter(department_type == "Emergency Department") %>% 
         group_by(month, year) %>%
-        summarise(attendance = sum(attendance_greater8hrs, na.rm = T)) %>% 
+        summarise(attendance = sum(var, na.rm = T)) %>% 
         mutate(winter_flag = case_when(month %in% c(1, 2, 3, 10, 11, 12) ~ "Yes",
                                        TRUE ~ "No")) %>%
         group_by(winter_flag, year) %>% 
