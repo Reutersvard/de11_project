@@ -1,0 +1,100 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r include = F}
+library(tidyverse)
+library(sf)
+library(rgdal)
+library(janitor)
+library(lubridate)
+library(leaflet)
+library(htmltools)
+```
+
+```{r warning=FALSE}
+beds_specialty <- read_csv("raw_data/beds_specialty.csv") %>%
+  clean_names()
+
+map_beds <- beds_specialty %>%
+  filter(location_qf == "d") %>% 
+  mutate(year = year(yq(quarter)),
+         quarter = str_sub(quarter, -2),
+         winter_flag = if_else(quarter %in% c("Q1", "Q4"), "Winter", "Summer")) %>%
+  select(year, winter_flag, hb, specialty_name, percentage_occupancy) %>% 
+  group_by(winter_flag, year, hb) %>% 
+  summarise(percentage_occupancy = mean(percentage_occupancy)) %>% 
+  mutate(hb_name = case_when(
+    hb == "S92000003" ~ "Scotland",
+    hb == "S08000015" ~ "Ayrshire & Arran",
+    hb == "S08000016" ~ "Borders",
+    hb == "S08000017" ~ "Dumfries & Galloway",
+    hb == "S08000019" ~ "Forth Valley",
+    hb == "S08000020" ~ "Grampian",
+    hb == "S08000022" ~ "Highland",
+    hb == "S08000024" ~ "Lothian",
+    hb == "S08000025" ~ "Orkney",
+    hb == "S08000026" ~ "Shetland",
+    hb == "S08000028" ~ "Western Isles",
+    hb == "S08000029" ~ "Fife",
+    hb == "S08000030" ~ "Tayside",
+    hb == "S08000031" ~ "Greater Glasgow & Clyde",
+    hb == "S08000032" ~"Lanarkshire",
+    TRUE ~ as.character(NA))) %>% 
+  filter(!is.na(hb_name)) %>% 
+  rename(hb_code = hb)
+
+write_csv(map_beds, "clean_data/map_beds.csv")
+
+# If it doesn't exist, create a clean shapes file
+# simplified_shapes <- st_transform(rmapshaper::ms_simplify(st_read(
+#   "raw_data/nhs_hb_2019/nhs_hb_2019.shp")),"CRS:84") %>%
+#   clean_names()
+# st_write(simplified_shapes, "clean_data/hb_clean.shp") 
+
+rm(beds_specialty, map_beds, simplified_shapes)
+```
+
+```{r}
+map_beds <- read_csv("clean_data/map_beds.csv")
+  
+filtered_beds <- map_beds %>%
+  filter(year == 2020,
+         winter_flag == "Winter")
+
+shapes <- st_read("clean_data/hb_clean.shp")
+
+merged <- sp::merge(shapes, filtered_beds) %>% 
+  select(hb_name, percentage_occupancy, geometry)
+```
+
+```{r warning=FALSE}
+pal <- colorBin("BuPu", domain = merged$percentage_occupancy)
+
+merged %>%
+  leaflet() %>%
+  addTiles() %>%
+  addProviderTiles(providers$OpenStreetMap) %>%
+  addPolygons(
+    fillColor = ~ pal(percentage_occupancy),
+    weight = 2,
+    opacity = 1,
+    color = "white",
+    dashArray = "3",
+    fillOpacity = 0.7,
+    highlight = highlightOptions(
+      weight = 5,
+      color = "#666",
+      dashArray = "",
+      fillOpacity = 0.7,
+      bringToFront = TRUE),
+    label = paste0(merged$hb_name, ":", " ", round(merged$percentage_occupancy), "%"),
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "15px",
+      direction = "auto"),
+    popup = paste0(merged$hb_name, ":", " ", round(merged$percentage_occupancy, digits = 2), "%")) %>%
+  leaflet::addLegend("topleft", pal = pal, values = ~percentage_occupancy,
+    title = "Bed Occupancy",
+    opacity = 1)
+```
