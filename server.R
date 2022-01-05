@@ -82,7 +82,6 @@ server <- function(input, output) {
       leaflet::addLegend("topleft", pal = pal, values = ~percentage_occupancy,
                          title = "Bed Occupancy",
                          opacity = 1)
-
   })
   
   
