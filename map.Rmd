@@ -10,6 +10,7 @@ library(rgdal)
 library(janitor)
 library(lubridate)
 library(leaflet)
+library(htmltools)
 ```
 
 ```{r include = F}
@@ -97,8 +98,15 @@ merged %>%
     labelOptions = labelOptions(
       style = list("font-weight" = "normal", padding = "3px 8px"),
       textsize = "15px",
-      direction = "auto")) %>%
+      direction = "auto"),
+    popup= paste0("<b>", htmlEscape(merged$percentage_occupancy), "%")) %>%
   addLegend("topleft", pal = pal, values = ~percentage_occupancy,
     title = "Percentage occupancy",
-    opacity = 1)
+    opacity = 1) %>%
+  addLayersControl(overlayGroups = c("Golden Jubilee", "Ayrshire & Arran", "Borders",
+                                     "Dumfries & Galloway", "Forth Valley",
+                                     "Grampian", "Highland", "Lothian", "Orkney", 
+                                     "Shetland", "Western Isles", "Fife", 
+                                     "Tayside", "Greater Glasgow & Clyde", 
+                                     "Lanarkshire", "Scotland"), baseGroups = (providers$OpenStreetMap))
 ```
