@@ -88,10 +88,13 @@ server <- function(input, output) {
         ggplot(aes(month, attendance, col = factor(year))) +
         geom_point() +
         geom_line() +
+        scale_x_continuous(breaks = 1:12) +
         labs(x = "Month",
              y = "Attendance Over 12 Hours",
              colour = "Year") +
-        theme_classic()
+        ggtitle("Number of Attendances per Year") +
+        theme_classic() +
+        theme(plot.title = element_text(size = 16, hjust = 0.5))
     })
 
     output$ae_stats_plot <- renderPlot({
@@ -107,8 +110,10 @@ server <- function(input, output) {
         aes(x = year, y = av_attendance) +
         geom_col() +
         labs(x = "Year",
-             y = "Average Attendance") +
-        theme_classic()
+             y = "Attendance Over the Previous Year") +
+        ggtitle("Number of Attendances compared to Previous Year") +
+        theme_classic() +
+        theme(plot.title = element_text(size = 16, hjust = 0.5))
     })
 
     # placeholder text

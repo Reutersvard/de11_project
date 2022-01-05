@@ -145,6 +145,9 @@ body <- dashboardBody(
                             ),
                      column(width = 3,
                             br(),
+                            setSliderColor(c("#9370db", "#9370db", "#9370db", "#9370db"),
+                                           c(1,2,3,4)),
+                            
                             sliderInput("ae_date_range", label = "Date Range",
                                         min = as.Date("2007-07-01","%Y-%m-%d"),
                                         max = as.Date("2021-10-01","%Y-%m-%d"),
