@@ -6,7 +6,7 @@ sidebar <- dashboardSidebar(
     menuItem("Overview", tabName = "overview", icon = icon("columns")),
     menuItem("COVID Insights", tabName = "covid", icon = icon("virus")),
     menuItem("A&E Admissions", tabName = "ae", icon = icon("chart-bar")),
-    menuItem("Statistics", tabName = "stats", icon = icon("chart-line")),
+    menuItem("Demographics", tabName = "demo", icon = icon("chart-line")),
     setSliderColor(c("#7CB342", "#7CB342", "#7CB342", "#7CB342"), c(1, 2, 3, 4)),
     sliderInput("date_range", label = "Date Range",
                 min = as.Date("2016-01-01","%Y-%m-%d"),
@@ -177,10 +177,10 @@ body <- dashboardBody(
             )
     ),
     
-    # Statistics tab -----------------------------------------------------------
+    # Demographics tab -----------------------------------------------------------
     
-    # navigation for statistics tab
-    tabItem(tabName = "stats",
+    # navigation for demographics tab
+    tabItem(tabName = "demo",
             
             # element for the left column
             br(),
@@ -193,26 +193,10 @@ body <- dashboardBody(
               
               # this is a placeholder plot
               column(width = 8,
-                     plotOutput("some_plot"))
-            ),
-            
-            # create the left box with date selection
-            fluidRow(
-              column(width = 4,
-                     radioButtons("variable_input",
-                                  "Analysis on which variable?",
-                                  choices = c("ICU", "A&E"))
-              ),
-              
-              # this is a placeholder plot
-              column(width = 8,
-                     plotOutput("null_plot"))
-              
-            ),
-            
-            fluidRow(  # create the bottom right box with text description
-              column(width = 8,
-                     textOutput("stat_text")))
+                     plotOutput("neurology_plot"),
+                     textOutput("stat_text")
+                     )
+            )
     )
   )
 )
