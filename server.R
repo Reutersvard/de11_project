@@ -74,7 +74,7 @@ server <- function(input, output) {
           by = 1)
     })
 
-    filtered_clean_ae <- eventReactive(input$update, {
+    filtered_clean_ae <- eventReactive(input$update_ae_button, {
       clean_ae %>%
       select(date, month, year, hbt, department_type, var = input$selecty) %>%
       filter(department_type == input$department_type) %>%

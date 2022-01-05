@@ -141,7 +141,8 @@ body <- dashboardBody(
                      column(width = 3,
                             br(),
                             radioButtons("department_type", "Department Type",
-                                         choices = unique(clean_ae$department_type))),
+                                         choices = unique(clean_ae$department_type))
+                            ),
                      column(width = 3,
                             br(),
                             sliderInput("ae_date_range", label = "Date Range",
@@ -151,11 +152,11 @@ body <- dashboardBody(
                                                   as.Date("2021-10-01")),
                                         timeFormat = "%Y-%m",
                                         step = 91.25,
-                                        ticks = FALSE
-                            )),
+                                        ticks = FALSE)
+                            ),
                      column(width = 3,
                             br(),
-                            actionButton("update",
+                            actionButton("update_ae_button",
                                          "Plot")
                             )
                       ),
@@ -163,18 +164,18 @@ body <- dashboardBody(
             # element for the main row, first half - A&E emergency plot
             fluidRow(column(width = 6,
                             br(),
-                            plotOutput("ae_emergency_plot")),
+                            plotOutput("ae_emergency_plot"),
                             
                             # create the bottom right box with text description
-                            textOutput("ae_text_placeholder"),
-                            ),
-            
+                            textOutput("ae_text_placeholder")),
+                            
             # creates the element for the main row, second half - (this is a placeholder plot)
                       column(width = 6,
                              br(),
                              plotOutput("ae_stats_plot")
                             )
-                    ),
+                    )
+    ),
     
 # Statistics tab -----------------------------------------------------------
     
