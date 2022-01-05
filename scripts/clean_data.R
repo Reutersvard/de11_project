@@ -85,3 +85,33 @@ clean_admissions <- admissions %>%
   filter(location_qf == "d")
 
 write_csv(clean_admissions, "clean_data/clean_beds_speciality_data.csv")
+
+
+# Admissions/covid cleanning script -----------
+
+admissions_agesex <- read_csv("raw_data/hospital_admissions_hb_agesex_20211201.csv")
+
+clean_admissions_agesex <- admissions_agesex %>%
+  clean_names() %>%
+  mutate(hb_name = case_when(
+    str_detect(hb, "15") ~ "Ayrshire and Arran",
+    str_detect(hb, "16") ~ "Borders",
+    str_detect(hb, "17") ~ "Dumfries and Galloway",
+    str_detect(hb, "19") ~ "Forth Valley",
+    str_detect(hb, "020") ~ "Grampian",
+    str_detect(hb, "22") ~ "Highland",
+    str_detect(hb, "24") ~ "Lothian",
+    str_detect(hb, "25") ~ "Orkney",
+    str_detect(hb, "26") ~ "Shetland",
+    str_detect(hb, "28") ~ "Western Isles",
+    str_detect(hb, "29") ~ "Fife",
+    str_detect(hb, "30") ~ "Tayside",
+    str_detect(hb, "31") ~ "Greater Glasgow and Clyde",
+    str_detect(hb, "32") ~ "Lanarkshire",
+    str_detect(hb, "92") ~ "Scotland"),
+    week_ending = ymd(week_ending)
+  )
+clean_admissions_agesex <- clean_admissions_agesex[, c(1, 2, 13, 3:12)]
+
+write_csv(clean_admissions_agesex, "clean_data/clean_admissions_agesex.csv")
+
