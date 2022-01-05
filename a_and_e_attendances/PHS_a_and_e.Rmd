@@ -25,7 +25,7 @@ nhs_boards <- read_csv("PHS_a_and_e_health_board_keys.csv")
 ae_clean <- ae %>%
   clean_names() %>%
   mutate(date = ym(month),
-         date_01 = as.Date(month, format = "%Y-%m"))
+         year_month = as.yearmon(date))
 
 
 glimpse(ae)
@@ -180,8 +180,6 @@ ae_tsibble <- ae_clean %>%
 # Attendance Over 12 Hours per Year
 
 ```{r}
-ae_clean <- ae_clean %>%
-  mutate(year_month = as.yearmon(ae_clean$date))
 
 ae_clean %>%
   filter(year_month >= "Jan 2016" & department_type == "Emergency Department") %>%
@@ -201,7 +199,7 @@ ae_clean %>%
        colour = "Year") +
   theme_classic()
 
-unique(ae_clean$department_type)
+# unique(ae_clean$department_type)
 
   #   mutate(
   #   moving_avg = slide_dbl(
