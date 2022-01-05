@@ -78,49 +78,44 @@ body <- dashboardBody(
             # creates a space between the top bar and the main page
             br(),
 
-            # create the element for the left column
-              sidebarLayout(
-
-                # creates the sidebar panel
-                sidebarPanel(
-                  numericInput("age_range_1", "Age",
-                               value = 1, min = 1, max = 100),
-
-                  # create the left box with date selection and button
-                  sliderInput("date_range", label = "Date Range",
-                              min = as.Date("2016-01-01","%Y-%m-%d"),
-                              max = as.Date("2021-12-31","%Y-%m-%d"),
-                              value = c(as.Date("2016-01-01"),
-                                        as.Date("2021-12-31")),
-                              timeFormat="%Y-%m",
-                              step = 90
-                  ),
-                  actionButton("applyButton",
-                               "Apply Changes")
-                            ),
-
-                # creates the main panel
-                mainPanel(
-
-                  # create the element for the right column -(this is a placeholder plot)
-                  fluidRow(column(width = 5,
-                                  br(),
-                                  plotOutput("beds_percentage_plot"),
-                                  br(),
-                                  br(),
-                                  br(),
-                                  
-                                  # create the bottom right box with text description
-                                  textOutput("icu_text_placeholder"),
-                                ),
-                           column(width = 5,
-                                  br(),
-                                  plotOutput("admissions_episodes_plot")
-                          )
-                        )
-                    )
-              )
-    ),
+            # creates the element for the top row
+            fluidRow(column(width = 4,
+                            br(),
+                            numericInput("age_range_1", "Age",
+                                         value = 1, min = 1, max = 100)),
+                     column(width = 4,
+                            br(),
+                            sliderInput("date_range", label = "Date Range",
+                                        min = as.Date("2016-01-01","%Y-%m-%d"),
+                                        max = as.Date("2021-12-31","%Y-%m-%d"),
+                                        value = c(as.Date("2016-01-01"),
+                                                  as.Date("2021-12-31")),
+                                        timeFormat="%Y-%m",
+                                        step = 90
+                            )
+                     ),
+                     column(width = 4,
+                            br(),
+                            actionButton("applyButton",
+                                         "Apply Changes")
+                     )
+            ),
+            
+            # creates the element for the main row, first half (this is a placeholder plot)
+            fluidRow(column(width = 5,
+                            br(),
+                            plotOutput("beds_percentage_plot"),
+                            # create the bottom right box with text description
+                            textOutput("icu_text_placeholder"),
+            ),
+            
+            # creates the element for the main row, second half - (this is a placeholder plot)
+                      column(width = 6,
+                             br(),
+                             plotOutput("admissions_episodes_plot")
+                            )
+                    ),
+            ),
 
 # A&E tab-----------------------------------------------------------
     tabItem(tabName = "ae",
