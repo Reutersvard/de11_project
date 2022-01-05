@@ -1,11 +1,11 @@
 ## ui.R ##
 
-# creates the sidebar menu -----------------------------------------------------
+# sidebar menu -----------------------------------------------------
 sidebar <- dashboardSidebar(
     sidebarMenu(
       menuItem("Overview", tabName = "overview", icon = icon("columns")),
-      menuItem("ICU Admissions", tabName = "icu", icon = icon("poll")),
-      menuItem("A&E Admissions", tabName = "ae", icon = icon("poll")),
+      menuItem("COVID Insights", tabName = "covid", icon = icon("virus")),
+      menuItem("A&E Admissions", tabName = "ae", icon = icon("chart-bar")),
       menuItem("Statistics", tabName = "stats", icon = icon("chart-line")),
       setSliderColor(c("#7CB342", "#7CB342", "#7CB342", "#7CB342"), c(1, 2, 3, 4)),
       sliderInput("date_range", label = "Date Range",
@@ -21,25 +21,21 @@ sidebar <- dashboardSidebar(
     )
 )
 
-# creates the main body --------------------------------------------------------
+# main dashboard body --------------------------------------------------------
 body <- dashboardBody(
   tabItems(
 
 # Overview tab ----------------------------------------------------------------
     tabItem(tabName = "overview",
 
-            # creates a space between the top bar and the main page
+            # space between the top bar and the main page
             br(),
 
-            # creates the element for the top row
+            # element for the top row
             fluidRow(column(width = 3,
                                   br(),
-                                  radioButtons("icu_choice_1", "ICU choice",
-                                               choices = c("Yes", "No"))),
-                       column(width = 3,
-                                  br(),
-                                  numericInput("age_range_1", "Age",
-                                               value = 1, min = 1, max = 100)),
+                                  radioButtons("season", "Season",
+                                               choices = c("Summer", "Winter"))),
                        column(width = 3,
                                   br(),
                                   sliderInput("date_range", label = "Date Range",
@@ -58,8 +54,8 @@ body <- dashboardBody(
                                 )
                      ),
 
-              # creates the element for the main row, first half (this is a placeholder plot)
-              fluidRow(column(width = 5,
+              # element for the main row, first half - beds_percentage_plot and will become a leaflet plot
+              fluidRow(column(width = 6,
                               br(),
                               plotOutput("beds_percentage_plot")
                               ),
@@ -67,117 +63,125 @@ body <- dashboardBody(
                         # creates the element for the main row, second half - (this is a placeholder plot)
                         column(width = 6,
                                br(),
-                               plotOutput("admissions_episodes_plot")
+                               plotOutput("neurology_plot")
                               )
                 ),
           ),
 
-# ICU tab ----------------------------------------------------------
-    tabItem(tabName = "icu",
+# COVID tab ----------------------------------------------------------
+    tabItem(tabName = "covid",
 
-            # creates a space between the top bar and the main page
+            # space between the top bar and the main page
             br(),
 
-            # create the element for the left column
-              sidebarLayout(
-
-                # creates the sidebar panel
-                sidebarPanel(
-                  numericInput("age_range_1", "Age",
-                               value = 1, min = 1, max = 100),
-
-                  # create the left box with date selection and button
-                  sliderInput("date_range", label = "Date Range",
-                              min = as.Date("2016-01-01","%Y-%m-%d"),
-                              max = as.Date("2021-12-31","%Y-%m-%d"),
-                              value = c(as.Date("2016-01-01"),
-                                        as.Date("2021-12-31")),
-                              timeFormat="%Y-%m",
-                              step = 90
-                  ),
-                  actionButton("applyButton",
-                               "Apply Changes")
-                            ),
-
-                # creates the main panel
-                mainPanel(
-
-                  # create the element for the right column -(this is a placeholder plot)
-                  fluidRow(column(width = 8,
-                                  br(),
-                                  plotOutput("dermatology_plot"),
-                                  br(),
-                                  br(),
-                                  br(),
-
-                                  # create the bottom right box with text description
-                                  textOutput("icu_text_placeholder")
-                                  )
-                          )
-                        )
-                    )
-              ),
+            # element for the top row
+            fluidRow(column(width = 3,
+                            br(),
+                            selectInput("hb_input",
+                                        "Health Board",
+                                        choices = 
+                                          unique(clean_admissions$hb), 
+                                        selected = "Scotland")
+                      ),
+                     column(width = 3,
+                            br(),
+                            selectInput("specialty_input",
+                                        "Speciality",
+                                        choices = 
+                                          unique(clean_admissions$specialty_name), 
+                                        selected = "Infectious Diseases")
+                     ),
+                     column(width = 3,
+                            br(),
+                            sliderInput("coivd_date_range", label = "Date Range",
+                                        min = as.Date("2016-01-01","%Y-%m-%d"),
+                                        max = as.Date("2021-12-31","%Y-%m-%d"),
+                                        value = c(as.Date("2016-01-01"),
+                                                  as.Date("2021-12-31")),
+                                        timeFormat="%Y-%m",
+                                        step = 90,
+                                        ticks = FALSE
+                            )
+                     ),
+                     column(width = 3,
+                            br(),
+                            actionButton("update",
+                                         "Apply Changes")
+                     )
+            ),
+            
+            # element for the main row, first half - placeholder plot
+            fluidRow(column(width = 5,
+                            br(),
+                            plotOutput("dermatology_plot"),
+                            
+                            # bottom right box with text description
+                            textOutput("icu_text_placeholder"),
+            ),
+            
+            # element for the main row, second half - admissions_episodes plot
+                      column(width = 6,
+                             br(),
+                             plotOutput("admissions_episodes_plot")
+                            )
+                    ),
+            ),
 
 # A&E tab-----------------------------------------------------------
     tabItem(tabName = "ae",
 
-            # creates a space between the top bar and the main page
+            # space between the top bar and the main page
             br(),
-
-            # create the element for the left column
-            sidebarLayout(
-
-              # creates the sidebar panel with the date, age and dept selection
-              sidebarPanel(
-                selectInput("selecty", "Select Column for Y Axis",
-                             choices = colnames(new_clean_ae)),
-                
-                radioButtons("department_type", "Department Type",
-                             choices = unique(clean_ae$department_type)),
-
-                sliderInput("ae_date_range", label = "Date Range",
-                            min = as.Date("2007-07-01","%Y-%m-%d"),
-                            max = as.Date("2021-10-01","%Y-%m-%d"),
-                            value = c(as.Date("2007-07-01"),
-                                      as.Date("2021-10-01")),
-                            timeFormat = "%Y-%m",
-                            step = 91.25,
-                            ticks = FALSE
-                ),
-                actionButton("update",
-                             "Plot")
-              ),
-
-              # creates the main panel
-              mainPanel(
-
-                # create the element for the right column -(this is a placeholder plot)
-                fluidRow(column(width = 5,
-                                br(),
-                                plotOutput("ae_emergency_plot"),
-                                
-                                # create the bottom right box with text description
-                                textOutput("ae_text_placeholder")
-                              ),
-                         
-                         column(width = 5,
-                                br(),
-                                plotOutput("ae_stats_plot"),
-                                
-                                # create the bottom right box with text description
-                                # textOutput("ae_text_placeholder")
-                                )
-                          )
-                      )
-              )
-
-    ),
+            
+            # element for the top row
+            fluidRow(column(width = 3,
+                            br(),
+                            selectInput("selecty", "Select Column for Y Axis",
+                                        choices = colnames(new_clean_ae))),
+                     column(width = 3,
+                            br(),
+                            radioButtons("department_type", "Department Type",
+                                         choices = unique(clean_ae$department_type))),
+                     column(width = 3,
+                            br(),
+                            sliderInput("ae_date_range", label = "Date Range",
+                                        min = as.Date("2007-07-01","%Y-%m-%d"),
+                                        max = as.Date("2021-10-01","%Y-%m-%d"),
+                                        value = c(as.Date("2007-07-01"),
+                                                  as.Date("2021-10-01")),
+                                        timeFormat = "%Y-%m",
+                                        step = 91.25,
+                                        ticks = FALSE
+                            )),
+                     column(width = 3,
+                            br(),
+                            actionButton("update",
+                                         "Plot")
+                            )
+                      ),
+            
+            # element for the main row, first half - A&E emergency plot
+            fluidRow(column(width = 6,
+                            br(),
+                            plotOutput("ae_emergency_plot")),
+                            
+                            # create the bottom right box with text description
+                            textOutput("ae_text_placeholder"),
+                            ),
+            
+            # creates the element for the main row, second half - (this is a placeholder plot)
+                      column(width = 6,
+                             br(),
+                             plotOutput("ae_stats_plot")
+                            )
+                    ),
     
-    # Statistics tab -----------------------------------------------------------
-    # creates the navigation for statistics tab
+# Statistics tab -----------------------------------------------------------
+    
+    # navigation for statistics tab
     tabItem(tabName = "stats",
 
-         # create the element for the left column
+         # element for the left column
           br(),
          fluidRow(
            column(width = 4,
