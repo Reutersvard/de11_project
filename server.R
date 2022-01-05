@@ -19,7 +19,25 @@ server <- function(input, output) {
     # eventReactive(input$applyButton
     
 # placeholder input for the COVID tab -------------------------------------------
-    output$beds_percentage_plot <- renderPlot({
+    
+  # sidleinput 
+  quart <- reactive({
+    seq(input$coivd_date_range[1], input$coivd_date_range[2], by = 1)
+  })
+  
+  # ACTION BUTTON
+  action_but <- eventReactive(input$update,{
+    clean_admissions %>% 
+      filter(date %in% quart(),
+             specialty_name %in% input$specialty_input,
+             hb %in% input$hb_input,
+             admission_type %in% c("Elective Inpatients", 
+                                   "Emergency Inpatients", 
+                                   "Transfers"))
+  })
+  
+  
+  output$beds_percentage_plot <- renderPlot({
       clean_beds_specialty_data %>% 
         filter(specialty_name %in% c("All Acute", "All Specialties"),
                hb != "Scotland") %>%
@@ -30,17 +48,16 @@ server <- function(input, output) {
         theme(legend.position="none")
     })    
 
-    output$admissions_episodes_plot <- renderPlot({
-      clean_admissions %>%  
-        filter(hb %in% "Scotland",
-               specialty_name %in% "Infectious Diseases",
-               admission_type %in% c("Elective Inpatients", 
-                                     "Emergency Inpatients", 
-                                     "Transfers")) %>% 
-        ggplot(aes(x = date, y = episodes, col = admission_type)) +
-        geom_point() +
-        geom_line()
-    })
+  # compate plot 
+  output$admissions_episodes_plot <- renderPlot({
+    validate(
+      need(nrow(action_but()) > 0, "No Data in this specialty for this Health Board")
+    )
+    action_but() %>%
+      ggplot(aes(x = date, y = episodes, col = admission_type)) +
+      geom_point() +
+      geom_line()
+  })
     
     output$icu_text_placeholder <- renderText({
       print("this is a placeholder text for the description of the plot in the ICU tab")
