@@ -1,18 +1,27 @@
 server <- function(input, output) {
   
 # placeholder input for the overview tab ---------------------------------------
-  output$icu_plot <- renderPlot({
-    activity_specialty %>%
-      filter(specialty_name == "Intensive Care Medicine") %>%
-      ggplot(aes(quarter)) +
-      geom_histogram(stat = "count")
+  output$beds_percentage_plot <- renderPlot({
+    clean_beds_specialty_data %>% 
+      filter(specialty_name %in% c("All Acute", "All Specialties"),
+             hb != "Scotland") %>%
+      ggplot(aes(x = date, y = percentage_occupancy, col = specialty_name)) +
+      geom_point() +
+      geom_line() +
+      facet_wrap(~ hb) +
+      theme(legend.position="none")
   })
     
-    output$cardio_plot <- renderPlot({
-      activity_specialty %>%
-        filter(specialty_name == "Cardiology") %>%
-        ggplot(aes(quarter)) +
-        geom_histogram(stat = "count") 
+    output$admissions_episodes_plot <- renderPlot({
+      clean_admissions %>%  
+        filter(hb %in% "Scotland",
+               specialty_name %in% "Infectious Diseases",
+               admission_type %in% c("Elective Inpatients", 
+                                     "Emergency Inpatients", 
+                                     "Transfers")) %>% 
+        ggplot(aes(x = date, y = episodes, col = admission_type)) +
+        geom_point() +
+        geom_line()
   })
     
     # eventReactive(input$applyButton
@@ -30,13 +39,28 @@ server <- function(input, output) {
     })
     
 # placeholder input for the A&E tab --------------------------------------------
-    output$neurology_plot <- renderPlot({
-      activity_specialty %>%
-        filter(specialty_name == "Neurology") %>%
-        ggplot(aes(quarter)) +
-        geom_histogram(stat = "count") 
+    output$ae_emergency_plot <- renderPlot ({
+      clean_ae %>%
+        filter(year > 2015) %>%
+        group_by(month, year) %>%
+        summarise(attendance = sum(attendance_greater8hrs, na.rm = T)) %>% 
+        ggplot(aes(month, attendance, fill = factor(year), col = factor(year))) +
+        geom_point() +
+        geom_line() +
+        labs(x = "Month",
+             y = "Attendance Over 12 Hours",
+             colour = "Year") +
+        theme_classic()
     })
 
+    output$urology_plot <- renderPlot({
+      activity_specialty %>%
+        filter(specialty_name == "Urology") %>%
+        ggplot(aes(quarter)) +
+        geom_histogram(stat = "count") 
+    })  
+    
+    
     output$ae_text_placeholder <- renderText({
       print("this is a placeholder text for the description of the plot in the A&E tab")
     })
@@ -50,13 +74,12 @@ server <- function(input, output) {
         geom_col() 
     })
     
-    #  The histogram
+    #  # The histogram
     # output$some_plot <- renderPlot({
-    #   ICU_quarter %>% 
+    #   ICU_quarter %>%
     #     ggplot(aes(n, quarter)) +
-    #     geom_boxplot() 
+    #     geom_boxplot()
     # })
-    # 
     
     
     #  The null distribution

@@ -181,7 +181,7 @@ ae_tsibble <- ae_clean %>%
 
 ```{r}
 
-ae_clean %>%
+clean_ae %>%
   filter(year_month >= "Jan 2016" & department_type == "Emergency Department") %>%
   group_by(year_month) %>%
   summarise(num_attendance = sum(attendance_greater12hrs, na.rm = TRUE)) %>%
