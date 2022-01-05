@@ -52,7 +52,8 @@ clean_beds_specialty_data <- beds_specialty_data %>%
               if_else(hb %in% "S08000032", "Lanarkshire",
               if_else(hb %in% "S92000003", "Scotland", NA_character_)
               ))))))))))))))) %>% 
-  filter(location_qf == "d")
+  filter(location_qf == "d")  %>% 
+  filter(hb != is.na(hb))
 
 write_csv(clean_beds_specialty_data, "clean_data/clean_beds_speciality_data.csv")
 
@@ -82,6 +83,7 @@ clean_admissions <- admissions %>%
           if_else(hb %in% "S08000032", "Lanarkshire",
           if_else(hb %in% "S92000003", "Scotland", NA_character_)
           ))))))))))))))) %>% 
-  filter(location_qf == "d")
+  filter(location_qf == "d") %>% 
+  filter(hb != is.na(hb))
 
-write_csv(clean_admissions, "clean_data/clean_beds_speciality_data.csv")
+write_csv(clean_admissions, "clean_data/clean_admissions_speciality_data.csv")
