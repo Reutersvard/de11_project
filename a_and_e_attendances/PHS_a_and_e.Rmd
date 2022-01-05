@@ -25,7 +25,9 @@ nhs_boards <- read_csv("PHS_a_and_e_health_board_keys.csv")
 ae_clean <- ae %>%
   clean_names() %>%
   mutate(date = ym(month),
-         year_month = as.yearmon(date))
+         year_month = as.yearmon(date),
+         year = year(date),
+         month = month(date))
 
 
 glimpse(ae)
@@ -235,6 +237,74 @@ ae_clean %>%
 
 ```
 
+# Wrangling Ricardos Work
+
+# 2021 outlier year for Summer Attendances over 12 Hours
+
+```{r}
+      ae_clean %>%
+        group_by(month, year) %>%
+        summarise(attendance = sum(attendance_greater12hrs, na.rm = T)) %>%
+        mutate(winter_flag = case_when(month %in% c(1, 2, 3, 10, 11, 12) ~ "Yes",
+                                       TRUE ~ "No")) %>%
+        group_by(winter_flag, year) %>%
+        summarise(av_attendance = mean(attendance)) %>%
+        arrange(year) %>%
+        filter(winter_flag == "No") %>%
+        ggplot() +
+        aes(x = year, y = av_attendance) +
+        geom_col() +
+        labs(x = "Year",
+             y = "Attendance Over the Previous Year") +
+        ggtitle("Number of Attendances compared to Previous Year") +
+        theme_classic() +
+        theme(plot.title = element_text(size = 16, hjust = 0.5))
+```
+
+# Winter Attendances over 12 Hours 
+
+```{r}
+      ae_clean %>%
+        group_by(month, year) %>%
+        summarise(attendance = sum(attendance_greater12hrs, na.rm = T)) %>%
+        mutate(winter_flag = case_when(month %in% c(1, 2, 3, 10, 11, 12) ~ "Yes",
+                                       TRUE ~ "No")) %>%
+        group_by(winter_flag, year) %>%
+        summarise(av_attendance = mean(attendance)) %>%
+        arrange(year) %>%
+        filter(winter_flag == "Yes") %>%
+        ggplot() +
+        aes(x = year, y = av_attendance) +
+        geom_col() +
+        labs(x = "Year",
+             y = "Attendance Over the Previous Year") +
+        ggtitle("Number of Attendances compared to Previous Year") +
+        theme_classic() +
+        theme(plot.title = element_text(size = 16, hjust = 0.5))
+```
+
+# Using Winter Flag as a fill to compare
+
+```{r}
+      ae_clean %>%
+        group_by(month, year) %>%
+        summarise(attendance = sum(attendance_greater12hrs, na.rm = T)) %>%
+        mutate(winter_flag = case_when(month %in% c(1, 2, 3, 10, 11, 12) ~ "Yes",
+                                       TRUE ~ "No")) %>%
+        group_by(winter_flag, year) %>%
+        summarise(av_attendance = mean(attendance)) %>%
+        arrange(year) %>%
+        ggplot(aes(x = year,
+                   y = av_attendance,
+                   fill = winter_flag),
+               position = dodge) +
+        geom_col() +
+        labs(x = "Year",
+             y = "Attendance Over the Previous Year") +
+        ggtitle("Number of Attendances compared to Previous Year") +
+        theme_classic() +
+        theme(plot.title = element_text(size = 16, hjust = 0.5))
+```
 
 
 
@@ -245,6 +315,9 @@ ae_clean %>%
 ### - Plot Spatial Map
 ### - z qf
 
+```{r}
+
+```
 
 
 

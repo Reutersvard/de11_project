@@ -86,13 +86,13 @@ server <- function(input, output) {
         group_by(month, year) %>%
         summarise(attendance = sum(var, na.rm = TRUE)) %>%
         ggplot(aes(month, attendance, col = factor(year))) +
-        geom_point() +
-        geom_line() +
+        geom_point(shape = 21) +
+        geom_line(size = 1.25) +
         scale_x_continuous(breaks = 1:12) +
         labs(x = "Month",
              y = "Attendance Over 12 Hours",
              colour = "Year") +
-        ggtitle("Number of Attendances per Year") +
+        ggtitle("A&E Attendances Per Month, By Year") +
         theme_classic() +
         theme(plot.title = element_text(size = 16, hjust = 0.5))
     })
@@ -106,15 +106,19 @@ server <- function(input, output) {
         group_by(winter_flag, year) %>%
         summarise(av_attendance = mean(attendance)) %>%
         arrange(year) %>%
-        ggplot() +
-        aes(x = year, y = av_attendance) +
+        ggplot(aes(x = year,
+                   y = av_attendance,
+                   fill = winter_flag),
+               position = dodge) +
         geom_col() +
         labs(x = "Year",
-             y = "Attendance Over the Previous Year") +
-        ggtitle("Number of Attendances compared to Previous Year") +
+             y = "A&E Attendances") +
+        ggtitle("A&E Attendances Each Year, By Season") +
         theme_classic() +
-        theme(plot.title = element_text(size = 16, hjust = 0.5))
-    })
+        theme(plot.title = element_text(size = 16, hjust = 0.5)) +
+        scale_x_continuous(breaks = 2007:2021) 
+        
+        })
 
     # placeholder text
     output$ae_text_placeholder <- renderText({
