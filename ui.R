@@ -57,13 +57,13 @@ body <- dashboardBody(
             # element for the main row, first half - beds_percentage_plot and will become a leaflet plot
             fluidRow(column(width = 6,
                             br(),
-                            plotOutput("map_winter")
+                            leafletOutput("map_winter")
             ),
             
             # creates the element for the main row, second half - (this is a placeholder plot)
             column(width = 6,
                    br(),
-                   plotOutput("map_summer")
+                   leafletOutput("map_summer")
             )
             ),
     ),
@@ -113,7 +113,7 @@ body <- dashboardBody(
             # element for the main row, first half - placeholder plot
             fluidRow(column(width = 5,
                             br(),
-                            plotOutput("admissions_episodes_plot"),
+                            plotOutput(""),
                             
                             # bottom right box with text description
                             textOutput("icu_text_placeholder"),

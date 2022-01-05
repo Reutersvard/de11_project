@@ -4,17 +4,17 @@ server <- function(input, output) {
   
   # Winter map
   output$map_winter <- renderPlot({
-    
+
     # Soon to become interactive
     filtered_beds <- map_beds %>%
       filter(year == 2020,
              winter_flag == "Winter")
-    
-    merged <- sp::merge(shapes, filtered_beds) %>% 
+
+    merged <- sp::merge(shapes, filtered_beds) %>%
       select(hb_name, percentage_occupancy, geometry)
-    
+
     pal <- colorBin("BuPu", domain = merged$percentage_occupancy)
-    
+
     merged %>%
       leaflet() %>%
       addTiles() %>%
@@ -41,9 +41,9 @@ server <- function(input, output) {
       leaflet::addLegend("topleft", pal = pal, values = ~percentage_occupancy,
                          title = "Bed Occupancy",
                          opacity = 1)
-    
+
   })
-  
+
   # Summer map
   output$map_summer <- renderPlot({
 

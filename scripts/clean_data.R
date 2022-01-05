@@ -43,7 +43,7 @@ write_csv(map_beds, "clean_data/map_beds.csv")
 #   clean_names()
 # st_write(simplified_shapes, "clean_data/hb_clean.shp") 
 
-rm(beds_specialty, map_beds, simplified_shapes)
+rm(beds_specialty, map_beds)
 
 
 
