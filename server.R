@@ -39,8 +39,14 @@ server <- function(input, output) {
     })
     
 # placeholder input for the A&E tab --------------------------------------------
-    output$ae_emergency_plot <- renderPlot ({
+    
+    filtered_clean_ae <- eventReactive(input$update, {
       clean_ae %>%
+      filter(department_type == input$department_type)
+    })
+    
+    output$ae_emergency_plot <- renderPlot ({
+      filtered_clean_ae() %>%
         filter(year > 2015) %>%
         group_by(month, year) %>%
         summarise(attendance = sum(attendance_greater8hrs, na.rm = T)) %>% 
@@ -53,11 +59,22 @@ server <- function(input, output) {
         theme_classic()
     })
 
-    output$urology_plot <- renderPlot({
-      activity_specialty %>%
-        filter(specialty_name == "Urology") %>%
-        ggplot(aes(quarter)) +
-        geom_histogram(stat = "count") 
+    output$ae_stats_plot <- renderPlot({
+      filtered_clean_ae() %>%
+        filter(year > 2007, department_type == "Emergency Department") %>% 
+        group_by(month, year) %>%
+        summarise(attendance = sum(attendance_greater8hrs, na.rm = T)) %>% 
+        mutate(winter_flag = case_when(month %in% c(1, 2, 3, 10, 11, 12) ~ "Yes",
+                                       TRUE ~ "No")) %>%
+        group_by(winter_flag, year) %>% 
+        summarise(av_attendance = mean(attendance)) %>% 
+        arrange(year) %>%
+        ggplot() +
+        aes(x = year, y = av_attendance) +
+        geom_col() +
+        labs(x = "Year",
+             y = "Average Attendance") +
+        theme_classic()
     })  
     
     

@@ -132,9 +132,8 @@ body <- dashboardBody(
                 numericInput("age_range_1", "Age",
                              value = 1, min = 1, max = 100),
                 
-                radioButtons("dept_type", "Department Type",
-                             choices = c("Accident and Emergency",
-                                        "Minor Injuries")),
+                radioButtons("department_type", "Department Type",
+                             choices = unique(clean_ae$department_type)),
 
                 sliderInput("date_range", label = "Date Range",
                             min = as.Date("2016-01-01","%Y-%m-%d"),
@@ -142,10 +141,10 @@ body <- dashboardBody(
                             value = c(as.Date("2016-01-01"),
                                       as.Date("2021-12-31")),
                             timeFormat="%Y-%m",
-                            step = 90
+                            step = 91.25, ticks = FALSE
                 ),
-                actionButton("applyButton",
-                             "Apply Changes")
+                actionButton("update",
+                             "Plot")
               ),
 
               # creates the main panel
@@ -162,7 +161,7 @@ body <- dashboardBody(
                          
                          column(width = 5,
                                 br(),
-                                plotOutput("urology_plot"),
+                                plotOutput("ae_stats_plot"),
                                 
                                 # create the bottom right box with text description
                                 # textOutput("ae_text_placeholder")
