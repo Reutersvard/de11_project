@@ -32,11 +32,11 @@ body <- dashboardBody(
             br(),
 
             # element for the top row
-            fluidRow(column(width = 4,
+            fluidRow(column(width = 3,
                                   br(),
-                                  radioButtons("icu_choice_1", "ICU choice",
-                                               choices = c("Yes", "No"))),
-                       column(width = 4,
+                                  radioButtons("season", "Season",
+                                               choices = c("Summer", "Winter"))),
+                       column(width = 3,
                                   br(),
                                   sliderInput("date_range", label = "Date Range",
                                               min = as.Date("2016-01-01","%Y-%m-%d"),
@@ -47,17 +47,17 @@ body <- dashboardBody(
                                               step = 90
                                               )
                                   ),
-                        column(width = 4,
+                        column(width = 3,
                                   br(),
                                   actionButton("applyButton",
                                                "Apply Changes")
                                 )
                      ),
 
-              # element for the main row, first half (this is a placeholder plot)
+              # element for the main row, first half - beds_percentage_plot and will become a leaflet plot
               fluidRow(column(width = 6,
                               br(),
-                              plotOutput("dermatology_plot")
+                              plotOutput("beds_percentage_plot")
                               ),
 
                         # creates the element for the main row, second half - (this is a placeholder plot)
@@ -110,10 +110,10 @@ body <- dashboardBody(
                      )
             ),
             
-            # element for the main row, first half - beds_percentage_plot
+            # element for the main row, first half - placeholder plot
             fluidRow(column(width = 5,
                             br(),
-                            plotOutput("beds_percentage_plot"),
+                            plotOutput("dermatology_plot"),
                             
                             # bottom right box with text description
                             textOutput("icu_text_placeholder"),

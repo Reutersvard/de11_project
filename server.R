@@ -2,13 +2,17 @@ server <- function(input, output) {
   
 # Overview tab ------------------------------------------------------------------
   
-  # placeholder plot
-  output$dermatology_plot <- renderPlot({
-    activity_specialty %>%
-      filter(specialty_name == "Dermatology") %>%
-      ggplot(aes(quarter)) +
-      geom_histogram(stat = "count") 
-  })
+  # beds_percentage_plot - partially complete plot, will become a leaflet plot
+  output$beds_percentage_plot <- renderPlot({
+    clean_beds_specialty_data %>% 
+      filter(specialty_name %in% c("All Acute", "All Specialties"),
+             hb != "Scotland") %>%
+      ggplot(aes(x = date, y = percentage_occupancy, col = specialty_name)) +
+      geom_point() +
+      geom_line() +
+      facet_wrap(~ hb) +
+      theme(legend.position="none")
+  })    
     
   # placeholder plot
   output$neurology_plot <- renderPlot({
@@ -48,17 +52,14 @@ server <- function(input, output) {
       geom_line()
   })
   
-  # beds_percentage_plot - complete plot
-  output$beds_percentage_plot <- renderPlot({
-    clean_beds_specialty_data %>% 
-      filter(specialty_name %in% c("All Acute", "All Specialties"),
-             hb != "Scotland") %>%
-      ggplot(aes(x = date, y = percentage_occupancy, col = specialty_name)) +
-      geom_point() +
-      geom_line() +
-      facet_wrap(~ hb) +
-      theme(legend.position="none")
-  })    
+  # placeholder plot
+  output$dermatology_plot <- renderPlot({
+    activity_specialty %>%
+      filter(specialty_name == "Dermatology") %>%
+      ggplot(aes(quarter)) +
+      geom_histogram(stat = "count") 
+  })
+  
     
   # placeholder text field
     output$icu_text_placeholder <- renderText({
