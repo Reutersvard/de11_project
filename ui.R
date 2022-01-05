@@ -79,24 +79,37 @@ body <- dashboardBody(
             br(),
 
             # creates the element for the top row
-            fluidRow(column(width = 4,
+            fluidRow(column(width = 3,
                             br(),
-                            numericInput("age_range_1", "Age",
-                                         value = 1, min = 1, max = 100)),
-                     column(width = 4,
+                            selectInput("hb_input",
+                                        "Which Health Board Area?",
+                                        choices = 
+                                          unique(clean_admissions$hb), 
+                                        selected = "Scotland")
+                      ),
+                     column(width = 3,
                             br(),
-                            sliderInput("date_range", label = "Date Range",
+                            selectInput("specialty_input",
+                                        "Which Specialty?",
+                                        choices = 
+                                          unique(clean_admissions$specialty_name), 
+                                        selected = "Infectious Diseases")
+                     ),
+                     column(width = 3,
+                            br(),
+                            sliderInput("coivd_date_range", label = "Date Range",
                                         min = as.Date("2016-01-01","%Y-%m-%d"),
                                         max = as.Date("2021-12-31","%Y-%m-%d"),
                                         value = c(as.Date("2016-01-01"),
                                                   as.Date("2021-12-31")),
                                         timeFormat="%Y-%m",
-                                        step = 90
+                                        step = 90,
+                                        ticks = FALSE
                             )
                      ),
-                     column(width = 4,
+                     column(width = 3,
                             br(),
-                            actionButton("applyButton",
+                            actionButton("update",
                                          "Apply Changes")
                      )
             ),
@@ -110,7 +123,7 @@ body <- dashboardBody(
                             textOutput("icu_text_placeholder"),
             ),
             
-            # creates the element for the main row, second half - (this is a placeholder plot)
+            # creates the element for the main row, second half 
                       column(width = 6,
                              br(),
                              plotOutput("admissions_episodes_plot")
