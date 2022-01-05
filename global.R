@@ -22,6 +22,6 @@ library(lubridate)
 # Source scripts & read clean data ----------------------------------------
 
 source("scripts/clean_data.R")
-clean_beds <- read_csv("clean_data/clean_beds.csv")
-clean_ae <- read_csv("clean_data/clean_ae.csv")
-clean_admissions <- read_csv("clean_data/clean_admissions_speciality_data.csv")
+clean_beds <- read_csv("clean_data/clean_beds.csv", lazy = FALSE)
+clean_ae <- read_csv("clean_data/clean_ae.csv", lazy = FALSE)
+clean_admissions <- read_csv("clean_data/clean_admissions_speciality_data.csv", lazy = FALSE)
