@@ -136,28 +136,28 @@ body <- dashboardBody(
             # element for the top row
             fluidRow(column(width = 3,
                             br(),
-                            numericInput("age_range_1", "Age",
-                                         value = 1, min = 1, max = 100)),
+                            selectInput("selecty", "Select Column for Y Axis",
+                                        choices = colnames(new_clean_ae))),
                      column(width = 3,
                             br(),
-                            radioButtons("dept_type", "Department Type",
-                                         choices = c("Accident and Emergency",
-                                                     "Minor Injuries"))),
-                     column(width = 3,
-                            br(),
-                            sliderInput("date_range", label = "Date Range",
-                                        min = as.Date("2016-01-01","%Y-%m-%d"),
-                                        max = as.Date("2021-12-31","%Y-%m-%d"),
-                                        value = c(as.Date("2016-01-01"),
-                                                  as.Date("2021-12-31")),
-                                        timeFormat="%Y-%m",
-                                        step = 90
-                                        )
+                            radioButtons("department_type", "Department Type",
+                                         choices = unique(clean_ae$department_type))
                             ),
                      column(width = 3,
                             br(),
-                            actionButton("applyButton",
-                                         "Apply Changes")
+                            sliderInput("ae_date_range", label = "Date Range",
+                                        min = as.Date("2007-07-01","%Y-%m-%d"),
+                                        max = as.Date("2021-10-01","%Y-%m-%d"),
+                                        value = c(as.Date("2007-07-01"),
+                                                  as.Date("2021-10-01")),
+                                        timeFormat = "%Y-%m",
+                                        step = 91.25,
+                                        ticks = FALSE)
+                            ),
+                     column(width = 3,
+                            br(),
+                            actionButton("update_ae_button",
+                                         "Plot")
                             )
                       ),
             
@@ -167,15 +167,14 @@ body <- dashboardBody(
                             plotOutput("ae_emergency_plot"),
                             
                             # create the bottom right box with text description
-                            textOutput("ae_text_placeholder"),
-                            ),
-            
+                            textOutput("ae_text_placeholder")),
+                            
             # creates the element for the main row, second half - (this is a placeholder plot)
                       column(width = 6,
                              br(),
-                             plotOutput("urology_plot")
+                             plotOutput("ae_stats_plot")
                             )
-                    ),
+                    )
     ),
     
 # Statistics tab -----------------------------------------------------------
