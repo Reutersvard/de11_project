@@ -1,6 +1,6 @@
 ## ui.R ##
 
-# creates the sidebar menu -----------------------------------------------------
+# sidebar menu -----------------------------------------------------
 sidebar <- dashboardSidebar(
     sidebarMenu(
       menuItem("Overview", tabName = "overview", icon = icon("columns")),
@@ -21,17 +21,17 @@ sidebar <- dashboardSidebar(
     )
 )
 
-# creates the main body --------------------------------------------------------
+# main dashboard body --------------------------------------------------------
 body <- dashboardBody(
   tabItems(
 
 # Overview tab ----------------------------------------------------------------
     tabItem(tabName = "overview",
 
-            # creates a space between the top bar and the main page
+            # space between the top bar and the main page
             br(),
 
-            # creates the element for the top row
+            # element for the top row
             fluidRow(column(width = 3,
                                   br(),
                                   radioButtons("icu_choice_1", "ICU choice",
@@ -58,7 +58,7 @@ body <- dashboardBody(
                                 )
                      ),
 
-              # creates the element for the main row, first half (this is a placeholder plot)
+              # element for the main row, first half (this is a placeholder plot)
               fluidRow(column(width = 6,
                               br(),
                               plotOutput("dermatology_plot")
@@ -75,14 +75,14 @@ body <- dashboardBody(
 # COVID tab ----------------------------------------------------------
     tabItem(tabName = "covid",
 
-            # creates a space between the top bar and the main page
+            # space between the top bar and the main page
             br(),
 
-            # creates the element for the top row
+            # element for the top row
             fluidRow(column(width = 3,
                             br(),
                             selectInput("hb_input",
-                                        "Which Health Board Area?",
+                                        "Health Board",
                                         choices = 
                                           unique(clean_admissions$hb), 
                                         selected = "Scotland")
@@ -90,7 +90,7 @@ body <- dashboardBody(
                      column(width = 3,
                             br(),
                             selectInput("specialty_input",
-                                        "Which Specialty?",
+                                        "Speciality",
                                         choices = 
                                           unique(clean_admissions$specialty_name), 
                                         selected = "Infectious Diseases")
@@ -114,16 +114,16 @@ body <- dashboardBody(
                      )
             ),
             
-            # creates the element for the main row, first half (this is a placeholder plot)
+            # element for the main row, first half - beds_percentage_plot
             fluidRow(column(width = 5,
                             br(),
                             plotOutput("beds_percentage_plot"),
                             
-                            # create the bottom right box with text description
+                            # bottom right box with text description
                             textOutput("icu_text_placeholder"),
             ),
             
-            # creates the element for the main row, second half 
+            # element for the main row, second half - admissions_episodes plot
                       column(width = 6,
                              br(),
                              plotOutput("admissions_episodes_plot")
@@ -134,10 +134,10 @@ body <- dashboardBody(
 # A&E tab-----------------------------------------------------------
     tabItem(tabName = "ae",
 
-            # creates a space between the top bar and the main page
+            # space between the top bar and the main page
             br(),
             
-            # creates the element for the top row
+            # element for the top row
             fluidRow(column(width = 3,
                             br(),
                             numericInput("age_range_1", "Age",
@@ -165,7 +165,7 @@ body <- dashboardBody(
                             )
                       ),
             
-            # creates the element for the main row, first half (this is a placeholder plot)
+            # element for the main row, first half - A&E emergency plot
             fluidRow(column(width = 6,
                             br(),
                             plotOutput("ae_emergency_plot"),
@@ -182,11 +182,12 @@ body <- dashboardBody(
                     ),
     ),
     
-    # Statistics tab -----------------------------------------------------------
-    # creates the navigation for statistics tab
+# Statistics tab -----------------------------------------------------------
+    
+    # navigation for statistics tab
     tabItem(tabName = "stats",
 
-         # create the element for the left column
+         # element for the left column
           br(),
          fluidRow(
            column(width = 4,

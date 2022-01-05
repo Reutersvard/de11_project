@@ -3,7 +3,7 @@
 activity_specialty <- read_csv("raw_data/activity_specialty.csv") %>%
   clean_names()
 
-# Beds cleaning script -----------------------------
+# Beds cleaning script ---------------------------------------------------------
 beds_specialty <- read_csv("raw_data/beds_specialty.csv") %>%
   clean_names()
 
@@ -16,7 +16,8 @@ clean_beds <- beds_specialty %>%
 write_csv(clean_beds, "clean_data/clean_beds.csv")
 rm(beds_specialty, clean_beds)
 
-# A&E cleaning script ----------------------------
+# A&E cleaning script ---------------------------------------------------------
+
 ae <- read_csv("raw_data/monthly_ae_waitingtimes_202110.csv")
 
 clean_ae <- ae <- read_csv("raw_data/ane_activity.csv") %>% clean_names() %>% 
@@ -26,9 +27,9 @@ clean_ae <- ae <- read_csv("raw_data/ane_activity.csv") %>% clean_names() %>%
 
 write_csv(clean_ae, "clean_data/clean_ae.csv")
 
+# Overview cleaning scripts ----------------------------------------------------
 
-# Beds cleaning script for overview --------------------------------------------
-
+# beds script
 beds_specialty_data <- read_csv("raw_data/beds_by_nhs_board_of_treatment_and_specialty.csv")
 clean_beds_specialty_data <- beds_specialty_data %>% 
   clean_names() %>% 
@@ -54,13 +55,10 @@ clean_beds_specialty_data <- beds_specialty_data %>%
               ))))))))))))))) %>% 
   filter(location_qf == "d")  %>% 
   filter(hb != is.na(hb))
-
 write_csv(clean_beds_specialty_data, "clean_data/clean_beds_speciality_data.csv")
 
-# Admissions cleaning script for overview --------------------------------------
-
+# admissions script
 admissions <- read_csv("raw_data/inpatient_and_daycase_by_nhs_board_of_treatment_and_specialty.csv")
-
 clean_admissions <- admissions %>% 
   clean_names() %>% 
   mutate(q = str_sub(quarter, -2)) %>% 
@@ -85,5 +83,4 @@ clean_admissions <- admissions %>%
           ))))))))))))))) %>% 
   filter(location_qf == "d") %>% 
   filter(hb != is.na(hb))
-
 write_csv(clean_admissions, "clean_data/clean_admissions_speciality_data.csv")

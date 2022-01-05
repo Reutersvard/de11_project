@@ -1,6 +1,8 @@
 server <- function(input, output) {
   
-# placeholder input for the overview tab ---------------------------------------
+# Overview tab ------------------------------------------------------------------
+  
+  # placeholder plot
   output$dermatology_plot <- renderPlot({
     activity_specialty %>%
       filter(specialty_name == "Dermatology") %>%
@@ -8,6 +10,7 @@ server <- function(input, output) {
       geom_histogram(stat = "count") 
   })
     
+  # placeholder plot
   output$neurology_plot <- renderPlot({
     activity_specialty %>%
       filter(specialty_name == "Neurology") %>%
@@ -16,16 +19,14 @@ server <- function(input, output) {
   })
 
     
-    # eventReactive(input$applyButton
+# COVID tab --------------------------------------------------------------------
     
-# placeholder input for the COVID tab -------------------------------------------
-    
-  # sidleinput 
+  # Date slider (reactive()) 
   quart <- reactive({
     seq(input$coivd_date_range[1], input$coivd_date_range[2], by = 1)
   })
   
-  # ACTION BUTTON
+  # Action button 
   action_but <- eventReactive(input$update,{
     clean_admissions %>% 
       filter(date %in% quart(),
@@ -35,20 +36,8 @@ server <- function(input, output) {
                                    "Emergency Inpatients", 
                                    "Transfers"))
   })
-  
-  
-  output$beds_percentage_plot <- renderPlot({
-      clean_beds_specialty_data %>% 
-        filter(specialty_name %in% c("All Acute", "All Specialties"),
-               hb != "Scotland") %>%
-        ggplot(aes(x = date, y = percentage_occupancy, col = specialty_name)) +
-        geom_point() +
-        geom_line() +
-        facet_wrap(~ hb) +
-        theme(legend.position="none")
-    })    
 
-  # compate plot 
+  # admissions_episodes_plot - final plot
   output$admissions_episodes_plot <- renderPlot({
     validate(
       need(nrow(action_but()) > 0, "No Data in this specialty for this Health Board")
@@ -58,12 +47,27 @@ server <- function(input, output) {
       geom_point() +
       geom_line()
   })
+  
+  # beds_percentage_plot - complete plot
+  output$beds_percentage_plot <- renderPlot({
+    clean_beds_specialty_data %>% 
+      filter(specialty_name %in% c("All Acute", "All Specialties"),
+             hb != "Scotland") %>%
+      ggplot(aes(x = date, y = percentage_occupancy, col = specialty_name)) +
+      geom_point() +
+      geom_line() +
+      facet_wrap(~ hb) +
+      theme(legend.position="none")
+  })    
     
+  # placeholder text field
     output$icu_text_placeholder <- renderText({
       print("this is a placeholder text for the description of the plot in the ICU tab")
     })
     
-# placeholder input for the A&E tab --------------------------------------------
+# A&E tab  ---------------------------------------------------------------------
+    
+    # ae_emergency_plot - final plot
     output$ae_emergency_plot <- renderPlot ({
       clean_ae %>%
         filter(year > 2015) %>%
@@ -78,6 +82,7 @@ server <- function(input, output) {
         theme_classic()
     })
 
+    # placeholder plot
     output$urology_plot <- renderPlot({
       activity_specialty %>%
         filter(specialty_name == "Urology") %>%
@@ -85,13 +90,14 @@ server <- function(input, output) {
         geom_histogram(stat = "count") 
     })  
     
-    
+    # placeholder text
     output$ae_text_placeholder <- renderText({
       print("this is a placeholder text for the description of the plot in the A&E tab")
     })
 
-# placeholder input for Stats tab ----------------------------------------------
+# Statistics tab ---------------------------------------------------------------
     
+    # placeholder plot
     output$some_plot <- renderPlot({
       clean_beds %>% 
         filter(hb == "S92000003") %>% 
@@ -119,6 +125,7 @@ server <- function(input, output) {
         shade_pvalue(obs_stat = 70.575, direction =  "right")
     })
     
+    # placeholder text
     output$stat_text <- renderText({
       print("A discussion of the p-value etc here")
     })  
