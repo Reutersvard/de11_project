@@ -25,5 +25,7 @@ source("scripts/clean_data.R")
 clean_beds <- read_csv("clean_data/clean_beds.csv")
 clean_ae <- read_csv("clean_data/clean_ae.csv")
 
+# SelectInput Choices for global ------------------------------------------
+
 new_clean_ae <- clean_ae %>%
   select(attendance_greater8hrs, attendance_greater12hrs)
