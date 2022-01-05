@@ -44,8 +44,6 @@ server <- function(input, output) {
       seq(input$ae_date_range[1],
           input$ae_date_range[2],
           by = 1)
-      
-      
     })
     
     filtered_clean_ae <- eventReactive(input$update, {

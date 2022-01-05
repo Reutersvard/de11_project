@@ -130,7 +130,7 @@ body <- dashboardBody(
               # creates the sidebar panel with the date, age and dept selection
               sidebarPanel(
                 selectInput("selecty", "Select Column for Y Axis",
-                             choices = colnames(clean_ae)),
+                             choices = colnames(new_clean_ae)),
                 
                 radioButtons("department_type", "Department Type",
                              choices = unique(clean_ae$department_type)),
