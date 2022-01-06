@@ -121,7 +121,11 @@ server <- function(input, output) {
     action_but() %>%
       ggplot(aes(x = date, y = episodes, col = admission_type)) +
       geom_point() +
-      geom_line()
+      geom_line(size = 1.25) +
+      labs(x = "Years",
+           y = "Numbers of Episodes") +
+      ggtitle("Specialty by health board") +
+      theme(plot.title = element_text(size = 16, hjust = 0.5))
   })
 
   # placeholder plot
@@ -129,7 +133,11 @@ server <- function(input, output) {
     action_but2() %>%
       ggplot(aes(x = date, y = episodes, col = admission_type)) +
       geom_point() +
-      geom_line()
+      geom_line(size = 1.25) +
+      labs(x = "Years",
+           y = "Numbers of Episodes") +
+      ggtitle("Specialty Across Scotland") +
+      theme(plot.title = element_text(size = 16, hjust = 0.5))
   })
 
 
