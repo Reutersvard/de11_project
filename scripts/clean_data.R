@@ -118,3 +118,40 @@ clean_admissions <- admissions %>%
 
 write_csv(clean_admissions, "clean_data/clean_admissions_speciality_data.csv")
 rm(clean_admissions)
+
+
+# length of stay script -----
+
+clean_inpatient <- read_csv("raw_data/inpatient_by_treatment_age_sex.csv") %>%
+  clean_names()%>%
+  mutate(hb_name = case_when(
+    hb == "S92000003" ~ "Scotland",
+    hb == "S08000015" ~ "Ayrshire & Arran",
+    hb == "S08000016" ~ "Borders",
+    hb == "S08000017" ~ "Dumfries & Galloway",
+    hb == "S08000019" ~ "Forth Valley",
+    hb == "S08000020" ~ "Grampian",
+    hb == "S08000022" ~ "Highland",
+    hb == "S08000024" ~ "Lothian",
+    hb == "S08000025" ~ "Orkney",
+    hb == "S08000026" ~ "Shetland",
+    hb == "S08000028" ~ "Western Isles",
+    hb == "S08000029" ~ "Fife",
+    hb == "S08000030" ~ "Tayside",
+    hb == "S08000031" ~ "Greater Glasgow & Clyde",
+    hb == "S08000032" ~"Lanarkshire"),
+    grouped_age = case_when(
+      age == "0-9 years" ~ "0-19",
+      age == "10-19 years" ~ "0-19",
+      age == "20-29 years" ~ "20-49",
+      age == "30-39 years" ~ "20-49",
+      age == "40-49 years" ~ "20-49",
+      age == "50-59 years" ~ "50-69",
+      age == "60-69 years" ~ "50-69",
+      age == "70-79 years" ~ "70 and over",
+      age == "80-89 years" ~ "70 and over",
+      age == "90 years and over" ~ "70 and over"),
+    quarter = yq(quarter)) %>%
+  filter(!is.na(hb_name))
+
+write_csv(clean_inpatient, "clean_data/clean_inpatient.csv")

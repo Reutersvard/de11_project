@@ -229,4 +229,29 @@ server <- function(input, output) {
     print("text can go here if we like")
   })
 
+
+# Demo tab -------
+
+# Date 
+date_range <- reactive({
+  seq(input$coivd_date_range[1], input$coivd_date_range[2], by = 1)
+})
+
+# Action button
+action_button <- eventReactive(input$update, ignoreNULL = FALSE, {
+  clean_inpatient %>%
+    filter(quarter %in% date_range(),
+           hb_name %in% input$hb_name_input,
+           admission_type %in% input$admission_input
+             ) %>%
+    group_by(grouped_age, quarter) %>%
+    summarise(average_length_of_stay = mean(average_length_of_stay))
+})
+
+# length of stay plot
+output$length_of_stay_plot <- renderPlot({
+  action_button() %>%
+    ggplot(aes(quarter, average_length_of_stay)) +
+    geom_line()
+})
 }
