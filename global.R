@@ -14,7 +14,10 @@ library(lubridate)
 
 # Source scripts & read clean data ----------------------------------------
 
-source("scripts/clean_data.R")
+# All cleaning was done in this script:
+# source("scripts/clean_data.R")
+
+source("scripts/theme_nhs.R")
 
 clean_beds <- read_csv("clean_data/clean_beds.csv", lazy = F)
 clean_ae <- read_csv("clean_data/clean_ae.csv", lazy = F)

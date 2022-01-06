@@ -116,7 +116,7 @@ server <- function(input, output) {
   # admissions_episodes_plot - final plot
   output$admissions_episodes_plot <- renderPlot({
     validate(
-      need(nrow(action_but()) > 0, "No Data in this specialty for this Health Board")
+      need(nrow(action_but()) > 0, "No data in this specialty for this Health Board")
     )
     action_but() %>%
       ggplot(aes(x = date, y = episodes, col = admission_type)) +
@@ -124,11 +124,11 @@ server <- function(input, output) {
       geom_line(size = 1.25) +
       labs(x = "Years",
            y = "Numbers of Episodes") +
-      ggtitle("Specialty by health board") +
-      theme(plot.title = element_text(size = 16, hjust = 0.5))
+      ggtitle("Specialty by Health Board") +
+      theme_nhs()
   })
 
-  # placeholder plot
+  # Scotland plot
   output$dermatology_plot <- renderPlot({
     action_but2() %>%
       ggplot(aes(x = date, y = episodes, col = admission_type)) +
@@ -136,8 +136,8 @@ server <- function(input, output) {
       geom_line(size = 1.25) +
       labs(x = "Years",
            y = "Numbers of Episodes") +
-      ggtitle("Specialty Across Scotland") +
-      theme(plot.title = element_text(size = 16, hjust = 0.5))
+      ggtitle("Episodes Across Scotland") +
+      theme_nhs()
   })
 
 
@@ -175,16 +175,15 @@ server <- function(input, output) {
              y = "Attendance Over 12 Hours",
              colour = "Year") +
         ggtitle("A&E Attendances Per Month, By Year") +
-        theme_classic() +
-        theme(plot.title = element_text(size = 16, hjust = 0.5))
+        theme_nhs()
     })
 
     output$ae_stats_plot <- renderPlot({
       filtered_clean_ae() %>%
         group_by(month, year) %>%
         summarise(attendance = sum(var, na.rm = T)) %>%
-        mutate(winter_flag = case_when(month %in% c(1, 2, 3, 10, 11, 12) ~ "Yes",
-                                       TRUE ~ "No")) %>%
+        mutate(winter_flag = case_when(month %in% c(1, 2, 3, 10, 11, 12) ~ "Winter",
+                                       TRUE ~ "Summer")) %>%
         group_by(winter_flag, year) %>%
         summarise(av_attendance = mean(attendance)) %>%
         arrange(year) %>%
@@ -197,8 +196,7 @@ server <- function(input, output) {
              y = "A&E Attendances") +
         ggtitle("A&E Attendances Each Year, By Season") +
         theme_classic() +
-        theme(plot.title = element_text(size = 16, hjust = 0.5)) +
-        scale_x_continuous(breaks = 2007:2021)
+        theme_nhs()
 
         })
 
@@ -233,7 +231,9 @@ output$length_of_stay_plot <- renderPlot({
     geom_line() +
     geom_point() +
     labs( x = "Date",
-          y = "Average Length of Stay",
-          col = "Age Group")
+          y = "Average length of stay",
+          col = "Age Group") +
+    ggtitle("Length of stay by year") +
+    theme_nhs()
 })
 }
