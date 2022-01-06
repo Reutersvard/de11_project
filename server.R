@@ -158,7 +158,8 @@ server <- function(input, output) {
   })
 
   # interactivity for buttons
-  filtered_clean_ae <- eventReactive(input$update_ae_button, {
+  filtered_clean_ae <- eventReactive(input$update_ae_button,
+                                     ignoreNULL = FALSE, {
     clean_ae %>%
       select(date, month, year, hbt, department_type, var = input$selecty) %>%
       filter(department_type == input$department_type) %>%
@@ -203,8 +204,11 @@ server <- function(input, output) {
         })
 
     # placeholder text
-    output$ae_text_placeholder <- renderText({
-      print("this is a placeholder text for the description of the plot in the A&E tab")
+    output$ae_stats_text <- renderUI({
+      HTML("Assumption: <br>  <ul><li> Winter Months: 1 , 2 , 3 ,10 ,11 ,12 </li><li> Summer Months: 4 , 5 , 6 , 7 , 8 , 9 </li></ul>  The percentage change year over year for winter months
+            in the emergency departments is 39% whereas for summer it is 23%. 
+            The difference in the compounded annual growth rate (CAGR) is 16%,
+            building towards continued winter crisises going forward")
     })
 
   # Demographics tab -----------------------------------------------------------

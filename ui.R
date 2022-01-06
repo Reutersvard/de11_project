@@ -133,12 +133,15 @@ body <- dashboardBody(
             # element for the top row
             fluidRow(column(width = 3,
                             br(),
-                            selectInput("selecty", "Select Column for Y Axis",
-                                        choices = colnames(new_clean_ae))),
+                            selectInput("selecty", "Attendance Greater than 8 or 12 Hours",
+                                        choices = c("Attendance Greater than 8 Hours" = colnames(new_clean_ae)[1],
+                                                    "Attendance Greater than 12 Hours" = colnames(new_clean_ae)[2]), 
+                                        selected = new_clean_ae$attendance_greater12hrs)),
                      column(width = 3,
                             br(),
                             radioButtons("department_type", "Department Type",
-                                         choices = unique(clean_ae$department_type))
+                                         choices = unique(clean_ae$department_type),
+                                         selected = "Emergency Department")
                      ),
                      column(width = 3,
                             br(),
@@ -154,21 +157,21 @@ body <- dashboardBody(
                      column(width = 3,
                             br(),
                             actionButton("update_ae_button",
-                                         "Plot")
+                                         "Apply Changes")
                      )
             ),
 
             # element for the main row, first half - A&E emergency plot
             fluidRow(column(width = 6,
                             br(),
-                            plotOutput("ae_emergency_plot"),
-
-                            # create the bottom right box with text description
-                            textOutput("ae_text_placeholder")),
+                            plotOutput("ae_emergency_plot")),
+                     
                      # creates the element for the main row, second half - (this is a placeholder plot)
                      column(width = 6,
                             br(),
-                            plotOutput("ae_stats_plot")
+                            plotOutput("ae_stats_plot"),
+                            
+                            uiOutput("ae_stats_text")
                      )
             )
     ),
