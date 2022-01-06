@@ -3,10 +3,10 @@
 # sidebar menu -----------------------------------------------------
 sidebar <- dashboardSidebar(
   sidebarMenu(
-    menuItem("Overview", tabName = "overview", icon = icon("columns")),
+    menuItem("Overview", tabName = "overview", icon = icon("globe")),
     menuItem("COVID Insights", tabName = "covid", icon = icon("virus")),
-    menuItem("A&E Admissions", tabName = "ae", icon = icon("chart-bar")),
-    menuItem("Demographics", tabName = "demo", icon = icon("chart-line")),
+    menuItem("A&E Admissions", tabName = "ae", icon = icon("chart-line")),
+    menuItem("Demographics", tabName = "demo", icon = icon("poll")),
     setSliderColor(c("#7CB342", "#7CB342", "#7CB342", "#7CB342"), c(1, 2, 3, 4)),
     sliderInput("date_range", label = "Date Range",
                 min = as.Date("2016-01-01","%Y-%m-%d"),
@@ -24,10 +24,10 @@ sidebar <- dashboardSidebar(
 # main dashboard body --------------------------------------------------------
 body <- dashboardBody(
   tabItems(
-    
-    # Overview tab ----------------------------------------------------------------
+
+    # Overview tab -------------------------------------------------------------
     tabItem(tabName = "overview",
-            
+
             # space between the top bar and the main page
             br(),
             
@@ -39,61 +39,58 @@ body <- dashboardBody(
               column(width = 2,
                  br(),
                  radioButtons("season_left", "Season for left",
-                               choices = c("Summer", "Winter"))),
+                               choices = unique(map_beds$winter_flag))),
               
              column(width = 2,
                  br(),
                  selectInput("year_left", "Year for left",
                               choices = unique(map_beds$year))),
                      
-                     column(width = 2),
+             column(width = 2,
+                    br(),
+                    radioButtons("season_right", "Season for right",
+                                 choices = unique(map_beds$winter_flag))),
+             
+             column(width = 2,
+                    br(),
+                    selectInput("year_right", "Year for right",
+                                choices = unique(map_beds$year))),
+             
+             column(width = 1)),
                      
-                     column(width = 2,
-                            br(),
-                            radioButtons("season_right", "Season for right",
-                                         choices = c("Summer", "Winter"))),
-                     column(width = 2,
-                            br(),
-                            selectInput("year_right", "Year for right",
-                                        choices = unique(map_beds$year))),
-              column(width = 1),
-            ),
-            
             # Left map
             fluidRow(column(width = 6,
                             br(),
-                            leafletOutput("map_left")
-            ),
+                            leafletOutput("map_left")),
             
             # Right map
             column(width = 6,
                    br(),
-                   leafletOutput("map_right")
-            )
+                   leafletOutput("map_right"))
             ),
     ),
-    
-    # COVID tab ----------------------------------------------------------
+
+    # COVID tab ----------------------------------------------------------------
     tabItem(tabName = "covid",
-            
+
             # space between the top bar and the main page
             br(),
-            
+
             # element for the top row
             fluidRow(column(width = 3,
                             br(),
                             selectInput("hb_input",
                                         "Health Board",
-                                        choices = 
-                                          unique(clean_admissions$hb), 
+                                        choices =
+                                          unique(clean_admissions$hb),
                                         selected = "Scotland")
             ),
             column(width = 3,
                    br(),
                    selectInput("specialty_input",
                                "Speciality",
-                               choices = 
-                                 unique(clean_admissions$specialty_name), 
+                               choices =
+                                 unique(clean_admissions$specialty_name),
                                selected = "Infectious Diseases")
             ),
             column(width = 3,
@@ -114,16 +111,16 @@ body <- dashboardBody(
                                 "Apply Changes")
             )
             ),
-            
+
             # element for the main row, first half - placeholder plot
             fluidRow(column(width = 5,
                             br(),
-                            plotOutput(""),
-                            
+                            plotOutput("dermatology_plot"),
+
                             # bottom right box with text description
                             textOutput("icu_text_placeholder"),
             ),
-            
+
             # element for the main row, second half - admissions_episodes plot
             column(width = 6,
                    br(),
@@ -131,13 +128,13 @@ body <- dashboardBody(
             )
             ),
     ),
-    
-    # A&E tab-----------------------------------------------------------
+
+    # A&E tab ------------------------------------------------------------------
     tabItem(tabName = "ae",
-            
+
             # space between the top bar and the main page
             br(),
-            
+
             # element for the top row
             fluidRow(column(width = 3,
                             br(),
@@ -150,6 +147,9 @@ body <- dashboardBody(
                      ),
                      column(width = 3,
                             br(),
+                            setSliderColor(c("#9370db", "#9370db", "#9370db", "#9370db"),
+                                           c(1,2,3,4)),
+
                             sliderInput("ae_date_range", label = "Date Range",
                                         min = as.Date("2007-07-01","%Y-%m-%d"),
                                         max = as.Date("2021-10-01","%Y-%m-%d"),
@@ -165,15 +165,14 @@ body <- dashboardBody(
                                          "Plot")
                      )
             ),
-            
+
             # element for the main row, first half - A&E emergency plot
             fluidRow(column(width = 6,
                             br(),
                             plotOutput("ae_emergency_plot"),
-                            
+
                             # create the bottom right box with text description
                             textOutput("ae_text_placeholder")),
-                     
                      # creates the element for the main row, second half - (this is a placeholder plot)
                      column(width = 6,
                             br(),
@@ -181,21 +180,20 @@ body <- dashboardBody(
                      )
             )
     ),
-    
-    # Demographics tab -----------------------------------------------------------
-    
+
+    # Demographics tab ---------------------------------------------------------
+
     # navigation for demographics tab
     tabItem(tabName = "demo",
-            
+
             # element for the left column
             br(),
-            fluidRow(
-              column(width = 4,
+            fluidRow(column(width = 4,
                      radioButtons("plot_input",
                                   "Select plot type",
                                   choices = c("Box plot", "Histogram"))
-              ),
-              
+                    ),
+
               # this is a placeholder plot
               column(width = 8,
                      plotOutput("neurology_plot"),

@@ -25,7 +25,9 @@ nhs_boards <- read_csv("PHS_a_and_e_health_board_keys.csv")
 ae_clean <- ae %>%
   clean_names() %>%
   mutate(date = ym(month),
-         year_month = as.yearmon(date))
+         year_month = as.yearmon(date),
+         year = year(date),
+         month = month(date))
 
 
 glimpse(ae)
@@ -235,6 +237,166 @@ ae_clean %>%
 
 ```
 
+# Wrangling Ricardos Work
+
+# 2021 outlier year for Summer Attendances over 12 Hours
+
+```{r}
+      ae_clean %>%
+        group_by(month, year) %>%
+        summarise(attendance = sum(attendance_greater12hrs, na.rm = T)) %>%
+        mutate(winter_flag = case_when(month %in% c(1, 2, 3, 10, 11, 12) ~ "Yes",
+                                       TRUE ~ "No")) %>%
+        group_by(winter_flag, year) %>%
+        summarise(av_attendance = mean(attendance)) %>%
+        arrange(year) %>%
+        filter(winter_flag == "No") %>%
+        ggplot() +
+        aes(x = year, y = av_attendance) +
+        geom_col() +
+        labs(x = "Year",
+             y = "Attendance Over the Previous Year") +
+        ggtitle("Number of Attendances compared to Previous Year") +
+        theme_classic() +
+        theme(plot.title = element_text(size = 16, hjust = 0.5))
+```
+
+# Winter Attendances over 12 Hours 
+
+```{r}
+      ae_clean %>%
+        group_by(month, year) %>%
+        summarise(attendance = sum(attendance_greater12hrs, na.rm = T)) %>%
+        mutate(winter_flag = case_when(month %in% c(1, 2, 3, 10, 11, 12) ~ "Yes",
+                                       TRUE ~ "No")) %>%
+        group_by(winter_flag, year) %>%
+        summarise(av_attendance = mean(attendance)) %>%
+        arrange(year) %>%
+        filter(winter_flag == "Yes") %>%
+        ggplot() +
+        aes(x = year, y = av_attendance) +
+        geom_col() +
+        labs(x = "Year",
+             y = "Attendance Over the Previous Year") +
+        ggtitle("Number of Attendances compared to Previous Year") +
+        theme_classic() +
+        theme(plot.title = element_text(size = 16, hjust = 0.5))
+```
+
+# Using Winter Flag as a fill to compare
+
+```{r}
+      ae_clean %>%
+        group_by(month, year) %>%
+        summarise(attendance = sum(attendance_greater12hrs, na.rm = T)) %>%
+        mutate(winter_flag = case_when(month %in% c(1, 2, 3, 10, 11, 12) ~ "Yes",
+                                       TRUE ~ "No")) %>%
+        group_by(winter_flag, year) %>%
+        summarise(av_attendance = mean(attendance)) %>%
+        arrange(year) %>%
+        ggplot(aes(x = year,
+                   y = av_attendance,
+                   fill = winter_flag),
+               position = dodge) +
+        geom_col() +
+        labs(x = "Year",
+             y = "Attendance Over the Previous Year") +
+        ggtitle("Number of Attendances compared to Previous Year") +
+        theme_classic() +
+        theme(plot.title = element_text(size = 16, hjust = 0.5))
+```
+
+```{r}
+      ae_clean %>%
+        filter(year < 2021) %>%
+        group_by(month, year) %>%
+        summarise(attendance = sum(attendance_greater12hrs, na.rm = T)) %>%
+        mutate(winter_flag = case_when(month %in% c(1, 2, 3, 10, 11, 12) ~ "Yes",
+                                       TRUE ~ "No")) %>%
+        group_by(winter_flag, year) %>%
+        summarise(av_attendance = mean(attendance)) %>%
+        arrange(year) %>%
+        mutate(percent_change = ((av_attendance/lag(av_attendance)-1)*100)) %>%
+        filter(winter_flag == "Yes") %>%
+        ggplot(aes(x = year,
+                   y = percent_change),
+               position = dodge) +
+        geom_col(fill = "steel blue",
+           colour = "black") +
+        labs(x = "Year",
+             y = "Attendance Over the Previous Year") +
+        ggtitle("Number of Attendances compared to Previous Year") +
+        theme_classic() +
+        theme(plot.title = element_text(size = 16, hjust = 0.5))
+```
+
+#  Trial to make negative values red
+
+```{r}
+
+# New Object to Hold the Statistical Data
+
+      ae_stats <- ae_clean %>%
+        filter(year < 2021) %>%
+        group_by(month, year) %>%
+        summarise(attendance = sum(attendance_greater12hrs, na.rm = T)) %>%
+        mutate(winter_flag = case_when(month %in% c(1, 2, 3, 10, 11, 12) ~ "Yes",
+                                       TRUE ~ "No")) %>%
+        group_by(winter_flag, year) %>%
+        summarise(av_attendance = mean(attendance)) %>%
+        arrange(year) %>%
+        mutate(percent_change = ((av_attendance/lag(av_attendance)-1)*100),
+               sign_percent_change = sign(percent_change))
+      ae_stats
+```
+# Percent Change YoY
+
+```{r}
+      ae_stats %>%
+        filter(winter_flag == "Yes") %>%
+        ggplot(aes(x = year,
+                   y = percent_change)) +
+        geom_col(aes(fill = interaction(sign_percent_change > 0)), colour = "black") +
+        scale_fill_manual(values = c("steel blue", "#FF0000"),
+                          breaks = c("TRUE", "FALSE")) +
+        scale_x_continuous(breaks = 2008:2020) +
+        scale_y_continuous(breaks = c(-50, 0, 50, 100, 150, 200)) +
+        labs(x = "Year",
+             y = "Percentage Change YoY") +
+        ggtitle("A&E No. of Attendances Change YoY") +
+        theme_classic() +
+        theme(plot.title = element_text(size = 16, hjust = 0.5),
+              legend.position = "none")
+```
+
+
+# Summary Statistics Table
+
+```{r}
+# Cleaned up table to check
+
+ae_clean %>%
+  filter(year < 2021) %>%
+  group_by(month, year) %>%
+  summarise(attendance = sum(attendance_greater12hrs, na.rm = T)) %>%
+  mutate(winter_flag = case_when(month %in% c(1, 2, 3, 10, 11, 12) ~ "Yes",
+                                 TRUE ~ "No")) %>%
+  group_by(winter_flag, year) %>%
+  summarise(av_attendance = mean(attendance)) %>%
+  arrange(winter_flag, year) %>%
+  mutate(percent_change = ((av_attendance/lag(av_attendance)-1)*100)) %>%
+  summarise(total_percent_change = sum(percent_change, na.rm = TRUE)/ 13) %>%
+  ggplot() +
+  geom_col(aes(x = winter_flag,
+               y = total_percent_change),
+           fill = "steel blue",
+           colour = "black") +
+  labs(x = "Winter Flag",
+       y = "Average Percent Change Year over Year") +
+  ggtitle(" Average Percent Change in A&E Attendance Year over Year")
+
+# Vary Winter Flag to Find Winter and Summer
+```
 
 
 
@@ -245,6 +407,9 @@ ae_clean %>%
 ### - Plot Spatial Map
 ### - z qf
 
+```{r}
+
+```
 
 
 
