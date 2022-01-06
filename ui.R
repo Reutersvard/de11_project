@@ -34,8 +34,6 @@ body <- dashboardBody(
             # Widgets for the maps
             fluidRow(
               
-              column(width = 1),
-              
               column(width = 2,
                  br(),
                  radioButtons("season_left", "Season for left",
@@ -45,6 +43,8 @@ body <- dashboardBody(
                  br(),
                  selectInput("year_left", "Year for left",
                               choices = unique(map_beds$year))),
+             
+             column(width = 2),
                      
              column(width = 2,
                     br(),
@@ -56,8 +56,13 @@ body <- dashboardBody(
                     selectInput("year_right", "Year for right",
                                 choices = unique(map_beds$year))),
              
-             column(width = 1)),
-                     
+             column(width = 1),
+             
+             column(width = 2,
+             br(), br(),
+             actionButton("update_maps",
+                          "Update maps"))),
+             
             # Left map
             fluidRow(column(width = 6,
                             br(),
