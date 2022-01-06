@@ -1,15 +1,15 @@
 server <- function(input, output) {
 
 # Overview tab -----------------------------------------------------------------
-  
+
   # Left map
   output$map_left <- renderLeaflet({
 
     # Filter for the buttons
-    filtered_beds <- map_beds %>%
+    filtered_beds <- clean_beds %>%
       filter(year == input$year_left,
              winter_flag == input$season_left)
-    
+
     merged <- sp::merge(shapes, filtered_beds) %>%
       select(hb_name, percentage_occupancy, geometry)
 
@@ -47,7 +47,7 @@ server <- function(input, output) {
   # Right map
   output$map_right <- renderLeaflet({
 
-    filtered_beds <- map_beds %>%
+    filtered_beds <- clean_beds %>%
       filter(year == input$year_right,
              winter_flag == input$season_right)
 
@@ -102,7 +102,7 @@ server <- function(input, output) {
                                    "Emergency Inpatients",
                                    "Transfers"))
   })
-  
+
   action_but2 <- eventReactive(input$update, ignoreNULL = FALSE, {
     clean_admissions %>%
       filter(date %in% quart(),
@@ -121,7 +121,11 @@ server <- function(input, output) {
     action_but() %>%
       ggplot(aes(x = date, y = episodes, col = admission_type)) +
       geom_point() +
-      geom_line()
+      geom_line(size = 1.25) +
+      labs(x = "Years",
+           y = "Numbers of Episodes") +
+      ggtitle("Specialty by health board") +
+      theme(plot.title = element_text(size = 16, hjust = 0.5))
   })
 
   # placeholder plot
@@ -129,7 +133,11 @@ server <- function(input, output) {
     action_but2() %>%
       ggplot(aes(x = date, y = episodes, col = admission_type)) +
       geom_point() +
-      geom_line()
+      geom_line(size = 1.25) +
+      labs(x = "Years",
+           y = "Numbers of Episodes") +
+      ggtitle("Specialty Across Scotland") +
+      theme(plot.title = element_text(size = 16, hjust = 0.5))
   })
 
 
@@ -201,7 +209,7 @@ server <- function(input, output) {
 
 # Demo tab -------
 
-# Date 
+# Date
 date_range <- reactive({
   seq(input$date_range[1], input$date_range[2], by = 1)
 })
