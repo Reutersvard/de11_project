@@ -29,3 +29,6 @@ shapes <- st_read("clean_data/hb_clean.shp")
 
 new_clean_ae <- clean_ae %>%
   select(attendance_greater8hrs, attendance_greater12hrs)
+
+new_admissions <- clean_admissions %>% 
+  filter(hb != "Scotland")
