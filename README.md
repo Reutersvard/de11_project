@@ -27,21 +27,23 @@ Adding region and specialty drop down to hospital admissions tab
 Linking the date, region, specialty and action buttons with server
 
 Pui worked on:
-Cleaning, wrangling, and preparing data for the ICU
+Cleaning, wrangling, and preparing data for ICU beds
+Developing the leaflet plots
 Exploring demographics data (cleaning, wrangling and preparing this data)
 Implementing this plot in the demographics tab
 Linking the date, region, age group and action buttons with server
 
 Jonny worked on:
 Cleaning, wrangling, and preparing data for the A&E attendance
-Implementing plot A and plot B from DATA to dashboard
+Implementing plot A and plot B from data to dashboard
 Linking the date, radio buttons and action buttons with server
 
 Ricardo worked on:
-Developing the UI and server for the former statistics tab
+Developing and maintaining the file and folder structure
 Exploring and developing the statistics
-Developing the leaflet plots
-Implementing the leaflet plots
+Developing and implementing the leaflet plots
+Developing the UI and server for the bed occupancy tab
+Managing implementation of functionalities and merge conflicts
 
 Louise worked on:
 Developing the UI for bed occupancy tab, hospital admissions tab, A&E attendance tab
