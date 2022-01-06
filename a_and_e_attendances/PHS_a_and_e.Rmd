@@ -166,6 +166,8 @@ ae_clean %>%
   geom_col(aes(x = date, y =  attendance_greater12hrs, fill = department_type)) +
   ggtitle("Time Series for Number of Attendances over 12 Hours") +
   labs(x = "Date", y = "Number of Attendances over 12 Hours")
+
+
 ```
 
 ```{r}
@@ -220,7 +222,7 @@ clean_ae %>%
 ae_clean %>%
   filter(year_month >= "Jan 2016") %>%
   group_by(year_month) %>%
-  summarise(num_attendance = sum(attendance_greater8hrs, na.rm = TRUE)) %>%
+  summarise(num_attendance = sum(attendance_greater12hrs, na.rm = TRUE)) %>%
   ggplot(aes(x = month(year_month,
                        label = TRUE,
                        abbr = TRUE),
@@ -231,7 +233,7 @@ ae_clean %>%
   geom_line() +
   geom_point() +
   labs(x = "Month",
-       y = "Attendance Over 8 Hours",
+       y = "Attendance Over 12 Hours",
        colour = "Year") +
   theme_classic()
 
@@ -250,13 +252,13 @@ ae_clean %>%
         group_by(winter_flag, year) %>%
         summarise(av_attendance = mean(attendance)) %>%
         arrange(year) %>%
-        filter(winter_flag == "No") %>%
+        filter(winter_flag == "Yes") %>%
         ggplot() +
         aes(x = year, y = av_attendance) +
         geom_col() +
         labs(x = "Year",
              y = "Attendance Over the Previous Year") +
-        ggtitle("Number of Attendances compared to Previous Year") +
+        ggtitle("Number of Attendances YoY for Winter Months") +
         theme_classic() +
         theme(plot.title = element_text(size = 16, hjust = 0.5))
 ```
@@ -300,8 +302,8 @@ ae_clean %>%
                position = dodge) +
         geom_col() +
         labs(x = "Year",
-             y = "Attendance Over the Previous Year") +
-        ggtitle("Number of Attendances compared to Previous Year") +
+             y = "Number of Attendances over 12 Hours") +
+        ggtitle("Number of Attendances over 12 Hours, by Season") +
         theme_classic() +
         theme(plot.title = element_text(size = 16, hjust = 0.5))
 ```
@@ -363,7 +365,7 @@ ae_clean %>%
         scale_y_continuous(breaks = c(-50, 0, 50, 100, 150, 200)) +
         labs(x = "Year",
              y = "Percentage Change YoY") +
-        ggtitle("A&E No. of Attendances Change YoY") +
+        ggtitle("A&E No. of Attendances over 12 Hours, Change YoY, For Winter") +
         theme_classic() +
         theme(plot.title = element_text(size = 16, hjust = 0.5),
               legend.position = "none")
@@ -392,8 +394,8 @@ ae_clean %>%
            fill = "steel blue",
            colour = "black") +
   labs(x = "Winter Flag",
-       y = "Average Percent Change Year over Year") +
-  ggtitle(" Average Percent Change in A&E Attendance Year over Year")
+       y = "Average Percent Change in Attendances over 12 Hours, YoY") +
+  ggtitle(" Average Percent Change in A&E Attendance Year over Year (2008 - 2020)")
 
 # Vary Winter Flag to Find Winter and Summer
 ```
