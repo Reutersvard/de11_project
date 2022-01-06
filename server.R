@@ -123,7 +123,7 @@ server <- function(input, output) {
       geom_point() +
       geom_line(size = 1.25) +
       labs(x = "Years",
-           y = "Numbers of Episodes") +
+           y = "Numbers of Episodes\n") +
       ggtitle("Specialty by Health Board") +
       theme_nhs()
 
@@ -136,7 +136,7 @@ server <- function(input, output) {
       geom_point() +
       geom_line(size = 1.25) +
       labs(x = "Years",
-           y = "Numbers of Episodes") +
+           y = "Numbers of Episodes\n") +
       ggtitle("Episodes Across Scotland") +
       theme_nhs()
 
