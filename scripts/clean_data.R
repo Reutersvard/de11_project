@@ -3,10 +3,8 @@
 
 # Beds and shapes cleaning for the map ----------------------------------------
 
-beds_specialty <- read_csv("raw_data/beds_specialty.csv") %>%
-  clean_names()
-
-clean_beds <- beds_specialty %>%
+clean_beds <- read_csv("raw_data/beds_specialty.csv") %>%
+  clean_names() %>% 
   filter(location_qf == "d") %>%
   mutate(year = year(yq(quarter)),
          quarter = str_sub(quarter, -2),
@@ -41,17 +39,18 @@ clean_beds <- beds_specialty %>%
 write_csv(clean_beds, "clean_data/clean_beds.csv")
 
 # If it doesn't exist, create a clean shapes file
+
 # simplified_shapes <- st_transform(rmapshaper::ms_simplify(st_read(
 #   "raw_data/nhs_hb_2019/nhs_hb_2019.shp")),"CRS:84") %>%
 #   clean_names()
 # st_write(simplified_shapes, "clean_data/hb_clean.shp")
 
-rm(beds_specialty, clean_beds)
+rm(clean_beds)
 
 
 # A&E cleaning script ---------------------------------------------------------
 
-clean_ae <- ae <- read_csv("raw_data/ane_activity.csv") %>% clean_names() %>%
+clean_ae <- read_csv("raw_data/ane_activity.csv") %>% clean_names() %>%
   mutate(date = ym(month),
          year = year(date),
          month = month(date))
@@ -65,6 +64,7 @@ rm(clean_ae)
 
 admissions <- read_csv("raw_data/activity_specialty.csv") %>%
   clean_names() %>%
+  filter(location_qf == "d") %>%
   mutate(q = str_sub(quarter, -2)) %>%
   mutate(quarter = yq(quarter)) %>%
   mutate(date = quarter,
@@ -91,19 +91,19 @@ admissions <- read_csv("raw_data/activity_specialty.csv") %>%
     TRUE ~ as.character(NA))) %>%
   filter(!is.na(hb))
 
-write_csv(clean_admissions, "clean_data/clean_admissions_speciality_data.csv")
-rm(clean_admissions)
+write_csv(admissions, "clean_data/clean_admissions_speciality_data.csv")
+rm(admissions)
 
 
 # length of stay script -----
 
-clean_inpatient <- read_csv("raw_data/inpatient_by_treatment_age_sex.csv") %>%
+clean_inpatient <- read_csv("raw_data/activity_demographics.csv") %>%
   clean_names()%>%
   mutate(hb_name = case_when(
     hb == "S92000003" ~ "Scotland",
-    hb == "S08000015" ~ "Ayrshire & Arran",
+    hb == "S08000015" ~ "Ayrshire and Arran",
     hb == "S08000016" ~ "Borders",
-    hb == "S08000017" ~ "Dumfries & Galloway",
+    hb == "S08000017" ~ "Dumfries and Galloway",
     hb == "S08000019" ~ "Forth Valley",
     hb == "S08000020" ~ "Grampian",
     hb == "S08000022" ~ "Highland",
@@ -113,8 +113,12 @@ clean_inpatient <- read_csv("raw_data/inpatient_by_treatment_age_sex.csv") %>%
     hb == "S08000028" ~ "Western Isles",
     hb == "S08000029" ~ "Fife",
     hb == "S08000030" ~ "Tayside",
-    hb == "S08000031" ~ "Greater Glasgow & Clyde",
-    hb == "S08000032" ~"Lanarkshire"),
+    hb == "S08000031" ~ "Greater Glasgow and Clyde",
+    hb == "S08000032" ~ "Lanarkshire",
+    hb == "S08000018" ~ "Fife",
+    hb == "S08000031" ~ "Greater Glasgow and Clyde",
+    hb == "S08000027" ~ "Tayside",
+    TRUE ~ as.character(NA)),
     grouped_age = case_when(
       age == "0-9 years" ~ "0-19",
       age == "10-19 years" ~ "0-19",
