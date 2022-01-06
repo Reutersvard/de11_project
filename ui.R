@@ -7,7 +7,7 @@ sidebar <- dashboardSidebar(
       menuItem("COVID Insights", tabName = "covid", icon = icon("virus")),
       menuItem("A&E Admissions", tabName = "ae", icon = icon("chart-bar")),
       menuItem("Statistics", tabName = "stats", icon = icon("chart-line")),
-      setSliderColor(c("#7CB342", "#7CB342", "#7CB342", "#7CB342"), c(1, 2, 3, 4)),
+      setSliderColor(c("#007FFF", "#007FFF", "#007FFF", "#007FFF"), c(1, 2, 3, 4)),
       sliderInput("date_range", label = "Date Range",
                   min = as.Date("2016-01-01","%Y-%m-%d"),
                   max = as.Date("2021-12-31","%Y-%m-%d"),
