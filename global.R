@@ -29,3 +29,6 @@ clean_inpatient <- read_csv("clean_data/clean_inpatient.csv", lazy = F)
 
 new_clean_ae <- clean_ae %>%
   select(attendance_greater8hrs, attendance_greater12hrs)
+
+new_admissions <- clean_admissions %>% 
+  filter(hb != "Scotland")
