@@ -5,10 +5,10 @@ server <- function(input, output) {
   # Left map
   output$map_left <- renderLeaflet({
 
-    # Soon to become interactive
+    # Filter for the buttons
     filtered_beds <- map_beds %>%
-      filter(year == 2020,
-             winter_flag == "Winter")
+      filter(year == input$year_left,
+             winter_flag == input$season_left)
     
     merged <- sp::merge(shapes, filtered_beds) %>%
       select(hb_name, percentage_occupancy, geometry)
@@ -48,8 +48,8 @@ server <- function(input, output) {
   output$map_right <- renderLeaflet({
 
     filtered_beds <- map_beds %>%
-      filter(year == 2020,
-             winter_flag == "Summer")
+      filter(year == input$year_right,
+             winter_flag == input$season_right)
 
     merged <- sp::merge(shapes, filtered_beds) %>%
       select(hb_name, percentage_occupancy, geometry)
@@ -116,9 +116,8 @@ server <- function(input, output) {
 
   # placeholder plot
   output$dermatology_plot <- renderPlot({
-    clean_beds %>%
-      filter(specialty_name == "Dermatology") %>%
-      ggplot(aes(quarter)) +
+    map_beds %>%
+      ggplot(aes(year)) +
       geom_histogram(stat = "count")
   })
 
