@@ -81,3 +81,7 @@ The main packages used for cleaning were `tidyverse` and `janitor`. Implementing
 ###
 
 ## References
+
+https://www.opendata.nhs.scot/dataset/hospital-beds-information
+https://www.opendata.nhs.scot/dataset/inpatient-and-daycase-activity/resource/00c00ecc-b533-426e-a433-42d79bdea5d4
+https://www.opendata.nhs.scot/dataset/inpatient-and-daycase-activity/resource/c3b4be64-5fb4-4a2f-af41-b0012f0a276a
