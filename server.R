@@ -1,15 +1,15 @@
 server <- function(input, output) {
 
 # Overview tab -----------------------------------------------------------------
-  
+
   # Left map
   output$map_left <- renderLeaflet({
 
     # Filter for the buttons
-    filtered_beds <- map_beds %>%
+    filtered_beds <- clean_beds %>%
       filter(year == input$year_left,
              winter_flag == input$season_left)
-    
+
     merged <- sp::merge(shapes, filtered_beds) %>%
       select(hb_name, percentage_occupancy, geometry)
 
@@ -47,7 +47,7 @@ server <- function(input, output) {
   # Right map
   output$map_right <- renderLeaflet({
 
-    filtered_beds <- map_beds %>%
+    filtered_beds <- clean_beds %>%
       filter(year == input$year_right,
              winter_flag == input$season_right)
 
@@ -85,7 +85,7 @@ server <- function(input, output) {
   })
 
 
-  # COVID tab --------------------------------------------------------------------
+  # Hospital admissions tab --------------------------------------------------------------------
 
   # Date slider (reactive())
   quart <- reactive({
@@ -102,7 +102,7 @@ server <- function(input, output) {
                                    "Emergency Inpatients",
                                    "Transfers"))
   })
-  
+
   action_but2 <- eventReactive(input$update, ignoreNULL = FALSE, {
     clean_admissions %>%
       filter(date %in% quart(),
@@ -116,26 +116,36 @@ server <- function(input, output) {
   # admissions_episodes_plot - final plot
   output$admissions_episodes_plot <- renderPlot({
     validate(
-      need(nrow(action_but()) > 0, "No Data in this specialty for this Health Board")
+      need(nrow(action_but()) > 0, "No data in this specialty for this Health Board")
     )
     action_but() %>%
       ggplot(aes(x = date, y = episodes, col = admission_type)) +
       geom_point() +
-      geom_line()
+      geom_line(size = 1.25) +
+      labs(x = "Years",
+           y = "Numbers of Episodes") +
+      ggtitle("Specialty by Health Board") +
+      theme_nhs()
   })
 
-  # placeholder plot
+  # Scotland plot
   output$dermatology_plot <- renderPlot({
     action_but2() %>%
       ggplot(aes(x = date, y = episodes, col = admission_type)) +
       geom_point() +
-      geom_line()
+      geom_line(size = 1.25) +
+      labs(x = "Years",
+           y = "Numbers of Episodes") +
+      ggtitle("Episodes Across Scotland") +
+      theme_nhs()
   })
 
 
-  # placeholder text field
-  output$icu_text_placeholder <- renderText({
-    print("this is placeholder text for the description of the plot in the COVID tab")
+  # hospital text
+  output$hosp_text <- renderText({
+    print("A Consultant Episode is the time a patient spends in the continuous
+          care of one consultant using Hospital Site of one Health Care Provider. 
+          A spell can contain multiple episodes.")
   })
 
   # A&E tab --------------------------------------------------------------------
@@ -167,16 +177,15 @@ server <- function(input, output) {
              y = "Attendance Over 12 Hours",
              colour = "Year") +
         ggtitle("A&E Attendances Per Month, By Year") +
-        theme_classic() +
-        theme(plot.title = element_text(size = 16, hjust = 0.5))
+        theme_nhs()
     })
 
     output$ae_stats_plot <- renderPlot({
       filtered_clean_ae() %>%
         group_by(month, year) %>%
         summarise(attendance = sum(var, na.rm = T)) %>%
-        mutate(winter_flag = case_when(month %in% c(1, 2, 3, 10, 11, 12) ~ "Yes",
-                                       TRUE ~ "No")) %>%
+        mutate(winter_flag = case_when(month %in% c(1, 2, 3, 10, 11, 12) ~ "Winter",
+                                       TRUE ~ "Summer")) %>%
         group_by(winter_flag, year) %>%
         summarise(av_attendance = mean(attendance)) %>%
         arrange(year) %>%
@@ -189,8 +198,7 @@ server <- function(input, output) {
              y = "A&E Attendances") +
         ggtitle("A&E Attendances Each Year, By Season") +
         theme_classic() +
-        theme(plot.title = element_text(size = 16, hjust = 0.5)) +
-        scale_x_continuous(breaks = 2007:2021)
+        theme_nhs()
 
         })
 
@@ -199,18 +207,35 @@ server <- function(input, output) {
       print("this is a placeholder text for the description of the plot in the A&E tab")
     })
 
-# Demographics tab ---------------------------------------------------------------
+  # Demographics tab -----------------------------------------------------------
 
-    #  The null distribution
-    output$neurology_plot <- renderPlot({
-      map_beds %>%
-        ggplot(aes(year)) +
-        geom_histogram(stat = "count")
-    })
+# Date slider
+date_range <- reactive({
+  seq(input$date_range[1], input$date_range[2], by = 1)
+})
 
-  # placeholder text
-  output$stat_text <- renderText({
-    print("text can go here if we like")
-  })
+# Action button
+action_button <- eventReactive(input$update_demo, ignoreNULL = FALSE, {
+  clean_inpatient %>%
+    filter(quarter %in% date_range(),
+           hb_name %in% input$hb_name_input,
+           admission_type == "All Inpatients and Day cases",
+           grouped_age %in% input$checkGroup
+             ) %>%
+    group_by(grouped_age, quarter) %>%
+    summarise(average_length_of_stay = mean(average_length_of_stay))
+})
 
+# length of stay plot
+output$length_of_stay_plot <- renderPlot({
+  action_button() %>%
+    ggplot(aes(quarter, average_length_of_stay, col = grouped_age)) +
+    geom_line() +
+    geom_point() +
+    labs( x = "Date",
+          y = "Average length of stay",
+          col = "Age Group") +
+    ggtitle("Length of stay by year") +
+    theme_nhs()
+})
 }

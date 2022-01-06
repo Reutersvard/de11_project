@@ -3,10 +3,10 @@
 # sidebar menu -----------------------------------------------------
 sidebar <- dashboardSidebar(
   sidebarMenu(
-    menuItem("Overview", tabName = "overview", icon = icon("globe")),
-    menuItem("COVID Insights", tabName = "covid", icon = icon("virus")),
-    menuItem("A&E Admissions", tabName = "ae", icon = icon("chart-line")),
-    menuItem("Demographics", tabName = "demo", icon = icon("poll"))
+    menuItem("Bed Occupancy", tabName = "bed", icon = icon("procedures")),
+    menuItem("Hospital Admissions", tabName = "hosp", icon = icon("hospital-user")),
+    menuItem("A&E Attendances", tabName = "ae", icon = icon("ambulance")),
+    menuItem("Demographics", tabName = "demo", icon = icon("city"))
   )
 )
 
@@ -15,7 +15,7 @@ body <- dashboardBody(
   tabItems(
 
     # Overview tab -------------------------------------------------------------
-    tabItem(tabName = "overview",
+    tabItem(tabName = "bed",
 
             # space between the top bar and the main page
             br(),
@@ -28,24 +28,24 @@ body <- dashboardBody(
               column(width = 2,
                  br(),
                  radioButtons("season_left", "Season for left",
-                               choices = unique(map_beds$winter_flag))),
+                               choices = unique(clean_beds$winter_flag))),
               
              column(width = 2,
                  br(),
                  selectInput("year_left", "Year for left",
-                              choices = unique(map_beds$year))),
+                              choices = unique(clean_beds$year))),
              
              column(width = 2),
                      
              column(width = 2,
                     br(),
                     radioButtons("season_right", "Season for right",
-                                 choices = unique(map_beds$winter_flag))),
+                                 choices = unique(clean_beds$winter_flag))),
              
              column(width = 2,
                     br(),
                     selectInput("year_right", "Year for right",
-                                choices = unique(map_beds$year))),
+                                choices = unique(clean_beds$year))),
              
              
              column(width = 1)),
@@ -63,8 +63,8 @@ body <- dashboardBody(
             ),
     ),
 
-    # COVID tab ----------------------------------------------------------------
-    tabItem(tabName = "covid",
+    # Hospital admissions tab ----------------------------------------------------------------
+    tabItem(tabName = "hosp",
 
             # space between the top bar and the main page
             br(),
@@ -75,7 +75,7 @@ body <- dashboardBody(
                             selectInput("hb_input",
                                         "Health Board",
                                         choices =
-                                          unique(clean_admissions$hb),
+                                          unique(new_admissions$hb),
                                         selected = "Tayside")
             ),
             column(width = 3,
@@ -88,6 +88,8 @@ body <- dashboardBody(
             ),
             column(width = 3,
                    br(),
+                   setSliderColor(c("#42A5F5", "#42A5F5", "#42A5F5"),
+                                  c(1,2,3)),
                    sliderInput("coivd_date_range", label = "Date Range",
                                min = as.Date("2016-01-01","%Y-%m-%d"),
                                max = as.Date("2021-12-31","%Y-%m-%d"),
@@ -106,12 +108,12 @@ body <- dashboardBody(
             ),
 
             # element for the main row, first half - placeholder plot
-            fluidRow(column(width = 5,
+            fluidRow(column(width = 6,
                             br(),
                             plotOutput("dermatology_plot"),
 
                             # bottom right box with text description
-                            textOutput("icu_text_placeholder"),
+                            textOutput("hosp_text"),
             ),
 
             # element for the main row, second half - admissions_episodes plot
@@ -140,9 +142,6 @@ body <- dashboardBody(
                      ),
                      column(width = 3,
                             br(),
-                            setSliderColor(c("#9370db", "#9370db", "#9370db", "#9370db"),
-                                           c(1,2,3,4)),
-
                             sliderInput("ae_date_range", label = "Date Range",
                                         min = as.Date("2007-07-01","%Y-%m-%d"),
                                         max = as.Date("2021-10-01","%Y-%m-%d"),
@@ -179,23 +178,49 @@ body <- dashboardBody(
     # navigation for demographics tab
     tabItem(tabName = "demo",
 
-            # element for the left column
+            # space between the top bar and the main page
             br(),
-            fluidRow(column(width = 4,
-                     radioButtons("plot_input",
-                                  "Select plot type",
-                                  choices = c("Box plot", "Histogram"))
-                    ),
-
-              # this is a placeholder plot
-              column(width = 8,
-                     plotOutput("neurology_plot"),
-                     textOutput("stat_text")
-                     )
+            
+            # element for the top row
+            fluidRow(column(width = 3,
+                            br(),
+                            selectInput("hb_name_input",
+                                        "Health Board",
+                                        choices =
+                                          unique(clean_inpatient$hb_name),
+                                        selected = "Scotland")
+            ),
+            column(width = 3,
+                   br(),
+                   checkboxGroupInput("checkGroup", 
+                                      "Age Group", 
+                                      choices = unique(clean_inpatient$grouped_age),
+                                      selected = c("0-19", "20-49", "50-69", "70 and over"))
+            ),
+            column(width = 3,
+                   br(),
+                   sliderInput("date_range", label = "Date Range",
+                               min = as.Date("2016-04-01","%Y-%m-%d"),
+                               max = as.Date("2021-04-01","%Y-%m-%d"),
+                               value = c(as.Date("2016-01-01"),
+                                         as.Date("2021-04-01")),
+                               timeFormat="%Y-%m",
+                               step = 90,
+                               ticks = FALSE
+                   )
+            ),
+            column(width = 3,
+                   br(),
+                   actionButton("update_demo",
+                                "Apply Changes")
             )
+            ),
+            br(),
+            plotOutput("length_of_stay_plot")
+    )
     )
   )
-)
+
 
 # Main dashboard and CSS -------------------------------------------------------
 dashboardPage(skin = "purple",
