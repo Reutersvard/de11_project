@@ -219,7 +219,8 @@ action_button <- eventReactive(input$update_demo, ignoreNULL = FALSE, {
   clean_inpatient %>%
     filter(quarter %in% date_range(),
            hb_name %in% input$hb_name_input,
-           admission_type %in% input$admission_input
+           admission_type == "All Inpatients and Day cases",
+           grouped_age %in% input$checkGroup
              ) %>%
     group_by(grouped_age, quarter) %>%
     summarise(average_length_of_stay = mean(average_length_of_stay))
@@ -228,8 +229,11 @@ action_button <- eventReactive(input$update_demo, ignoreNULL = FALSE, {
 # length of stay plot
 output$length_of_stay_plot <- renderPlot({
   action_button() %>%
-    ggplot(aes(quarter, average_length_of_stay)) +
+    ggplot(aes(quarter, average_length_of_stay, col = grouped_age)) +
     geom_line() +
-    facet_wrap(~ grouped_age)
+    geom_point() +
+    labs( x = "Date",
+          y = "Average Length of Stay",
+          col = "Age Group")
 })
 }
