@@ -39,7 +39,10 @@ map_beds <- beds_specialty %>%
     hb == "S08000029" ~ "Fife",
     hb == "S08000030" ~ "Tayside",
     hb == "S08000031" ~ "Greater Glasgow & Clyde",
-    hb == "S08000032" ~"Lanarkshire",
+    hb == "S08000032" ~ "Lanarkshire",
+    hb == "S08000018" ~ "Fife",
+    hb == "S08000031" ~ "Greater Glasgow & Clyde",
+    hb == "S08000027" ~ "Tayside",
     TRUE ~ as.character(NA))) %>% 
   filter(!is.na(hb_name)) %>% 
   rename(hb_code = hb)
@@ -52,7 +55,7 @@ write_csv(map_beds, "clean_data/map_beds.csv")
 #   clean_names()
 # st_write(simplified_shapes, "clean_data/hb_clean.shp") 
 
-rm(beds_specialty, map_beds, simplified_shapes)
+# rm(beds_specialty, map_beds, simplified_shapes)
 ```
 
 ```{r}
@@ -67,6 +70,11 @@ shapes <- st_read("clean_data/hb_clean.shp")
 merged <- sp::merge(shapes, filtered_beds) %>% 
   select(hb_name, percentage_occupancy, geometry)
 ```
+```{r}
+unique(map_beds$hb_name)
+```
+
+
 
 ```{r warning=FALSE}
 pal <- colorBin("BuPu", domain = merged$percentage_occupancy)

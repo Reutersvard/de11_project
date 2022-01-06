@@ -30,7 +30,10 @@ map_beds <- beds_specialty %>%
     hb == "S08000029" ~ "Fife",
     hb == "S08000030" ~ "Tayside",
     hb == "S08000031" ~ "Greater Glasgow & Clyde",
-    hb == "S08000032" ~"Lanarkshire",
+    hb == "S08000032" ~ "Lanarkshire",
+    hb == "S08000018" ~ "Fife",
+    hb == "S08000031" ~ "Greater Glasgow & Clyde",
+    hb == "S08000027" ~ "Tayside",
     TRUE ~ as.character(NA))) %>% 
   filter(!is.na(hb_name)) %>% 
   rename(hb_code = hb)
