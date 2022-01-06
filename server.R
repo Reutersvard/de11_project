@@ -145,9 +145,9 @@ server <- function(input, output) {
 
   # hospital text
   output$hosp_text <- renderText({
-    print("An Episode is the time a patient spends in the continuous
-          care of one consultant using a Hospital Site of one Health Care Provider. 
-          A spell can contain multiple episodes.")
+    br()
+    print("An episode is the time that a patient spends in the continuous
+          care of one consultant, in one hospital under the same Health Board.")
   })
 
   # A&E tab --------------------------------------------------------------------
