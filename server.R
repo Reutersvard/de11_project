@@ -126,6 +126,7 @@ server <- function(input, output) {
            y = "Numbers of Episodes") +
       ggtitle("Specialty by Health Board") +
       theme_nhs()
+
   })
 
   # Scotland plot
@@ -138,6 +139,7 @@ server <- function(input, output) {
            y = "Numbers of Episodes") +
       ggtitle("Episodes Across Scotland") +
       theme_nhs()
+
   })
 
 
