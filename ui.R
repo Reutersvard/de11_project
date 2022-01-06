@@ -193,11 +193,10 @@ body <- dashboardBody(
             ),
             column(width = 3,
                    br(),
-                   selectInput("admission_input",
-                               "Admission Type",
-                               choices =
-                                 unique(clean_inpatient$admission_type),
-                               selected = "All Inpatients and Day cases")
+                   checkboxGroupInput("checkGroup", 
+                                      "Age Group", 
+                                      choices = unique(clean_inpatient$grouped_age),
+                                      selected = c("0-19", "20-49", "50-69", "70 and over"))
             ),
             column(width = 3,
                    br(),
