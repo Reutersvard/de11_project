@@ -202,7 +202,7 @@ body <- dashboardBody(
                    sliderInput("date_range", label = "Date Range",
                                min = as.Date("2016-04-01","%Y-%m-%d"),
                                max = as.Date("2021-04-01","%Y-%m-%d"),
-                               value = c(as.Date("2016-01-01"),
+                               value = c(as.Date("2016-04-01"),
                                          as.Date("2021-04-01")),
                                timeFormat="%Y-%m",
                                step = 90,

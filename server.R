@@ -225,7 +225,7 @@ action_button <- eventReactive(input$update_demo, ignoreNULL = FALSE, {
            grouped_age %in% input$checkGroup
              ) %>%
     group_by(grouped_age, quarter) %>%
-    summarise(average_length_of_stay = mean(average_length_of_stay))
+    summarise(average_length_of_stay = mean(average_length_of_stay, na.rm = T))
 })
 
 # length of stay plot
