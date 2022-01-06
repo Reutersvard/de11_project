@@ -106,7 +106,7 @@ body <- dashboardBody(
             ),
 
             # element for the main row, first half - placeholder plot
-            fluidRow(column(width = 5,
+            fluidRow(column(width = 6,
                             br(),
                             plotOutput("dermatology_plot"),
 
