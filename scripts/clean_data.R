@@ -35,7 +35,7 @@ clean_beds <- read_csv("raw_data/beds_specialty.csv") %>%
     TRUE ~ as.character(NA))) %>%
   filter(!is.na(hb_name)) %>%
   rename(hb_code = hb)
-
+  
 write_csv(clean_beds, "clean_data/clean_beds.csv")
 
 # If it doesn't exist, create a clean shapes file

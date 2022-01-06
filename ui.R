@@ -3,10 +3,10 @@
 # sidebar menu -----------------------------------------------------
 sidebar <- dashboardSidebar(
   sidebarMenu(
-    menuItem("Overview", tabName = "overview", icon = icon("globe")),
-    menuItem("COVID Insights", tabName = "covid", icon = icon("virus")),
-    menuItem("A&E Admissions", tabName = "ae", icon = icon("chart-line")),
-    menuItem("Demographics", tabName = "demo", icon = icon("poll"))
+    menuItem("Bed Occupancy", tabName = "bed", icon = icon("procedures")),
+    menuItem("Hospital Admissions", tabName = "hosp", icon = icon("hospital-user")),
+    menuItem("A&E Attendances", tabName = "ae", icon = icon("ambulance")),
+    menuItem("Demographics", tabName = "demo", icon = icon("city"))
   )
 )
 
@@ -15,7 +15,7 @@ body <- dashboardBody(
   tabItems(
 
     # Overview tab -------------------------------------------------------------
-    tabItem(tabName = "overview",
+    tabItem(tabName = "bed",
 
             # space between the top bar and the main page
             br(),
@@ -63,8 +63,8 @@ body <- dashboardBody(
             ),
     ),
 
-    # COVID tab ----------------------------------------------------------------
-    tabItem(tabName = "covid",
+    # Hospital admissions tab ----------------------------------------------------------------
+    tabItem(tabName = "hosp",
 
             # space between the top bar and the main page
             br(),
@@ -88,6 +88,8 @@ body <- dashboardBody(
             ),
             column(width = 3,
                    br(),
+                   setSliderColor(c("#42A5F5", "#42A5F5", "#42A5F5"),
+                                  c(1,2,3)),
                    sliderInput("coivd_date_range", label = "Date Range",
                                min = as.Date("2016-01-01","%Y-%m-%d"),
                                max = as.Date("2021-12-31","%Y-%m-%d"),
@@ -111,7 +113,7 @@ body <- dashboardBody(
                             plotOutput("dermatology_plot"),
 
                             # bottom right box with text description
-                            textOutput("icu_text_placeholder"),
+                            textOutput("hosp_text"),
             ),
 
             # element for the main row, second half - admissions_episodes plot
@@ -140,9 +142,6 @@ body <- dashboardBody(
                      ),
                      column(width = 3,
                             br(),
-                            setSliderColor(c("#9370db", "#9370db", "#9370db", "#9370db"),
-                                           c(1,2,3,4)),
-
                             sliderInput("ae_date_range", label = "Date Range",
                                         min = as.Date("2007-07-01","%Y-%m-%d"),
                                         max = as.Date("2021-10-01","%Y-%m-%d"),
