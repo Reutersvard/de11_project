@@ -29,9 +29,6 @@ clean_beds <- read_csv("raw_data/beds_specialty.csv") %>%
     hb == "S08000030" ~ "Tayside",
     hb == "S08000031" ~ "Greater Glasgow and Clyde",
     hb == "S08000032" ~ "Lanarkshire",
-    hb == "S08000018" ~ "Fife",
-    hb == "S08000031" ~ "Greater Glasgow and Clyde",
-    hb == "S08000027" ~ "Tayside",
     TRUE ~ as.character(NA))) %>%
   filter(!is.na(hb_name)) %>%
   rename(hb_code = hb)
@@ -85,9 +82,6 @@ admissions <- read_csv("raw_data/activity_specialty.csv") %>%
     hb == "S08000030" ~ "Tayside",
     hb == "S08000031" ~ "Greater Glasgow and Clyde",
     hb == "S08000032" ~ "Lanarkshire",
-    hb == "S08000018" ~ "Fife",
-    hb == "S08000031" ~ "Greater Glasgow and Clyde",
-    hb == "S08000027" ~ "Tayside",
     TRUE ~ as.character(NA))) %>%
   filter(!is.na(hb))
 
@@ -115,9 +109,6 @@ clean_inpatient <- read_csv("raw_data/activity_demographics.csv") %>%
     hb == "S08000030" ~ "Tayside",
     hb == "S08000031" ~ "Greater Glasgow and Clyde",
     hb == "S08000032" ~ "Lanarkshire",
-    hb == "S08000018" ~ "Fife",
-    hb == "S08000031" ~ "Greater Glasgow and Clyde",
-    hb == "S08000027" ~ "Tayside",
     TRUE ~ as.character(NA)),
     grouped_age = case_when(
       age == "0-9 years" ~ "0-19",
