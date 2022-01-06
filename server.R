@@ -1,29 +1,91 @@
 server <- function(input, output) {
 
-# Overview tab ------------------------------------------------------------------
+# Overview tab -----------------------------------------------------------------
 
-  # beds_percentage_plot - partially complete plot, will become a leaflet plot
-  output$beds_percentage_plot <- renderPlot({
-    clean_beds_specialty_data %>%
-      filter(specialty_name %in% c("All Acute", "All Specialties"),
-             hb != "Scotland") %>%
-      ggplot(aes(x = date, y = percentage_occupancy, col = specialty_name)) +
-      geom_point() +
-      geom_line() +
-      facet_wrap(~ hb) +
-      theme(legend.position="none")
+  # Winter map
+  output$map_winter <- renderPlot({
+
+    # Soon to become interactive
+    filtered_beds <- map_beds %>%
+      filter(year == 2020,
+             winter_flag == "Winter")
+
+    merged <- sp::merge(shapes, filtered_beds) %>%
+      select(hb_name, percentage_occupancy, geometry)
+
+    pal <- colorBin("BuPu", domain = merged$percentage_occupancy)
+
+    merged %>%
+      leaflet() %>%
+      addTiles() %>%
+      addProviderTiles(providers$OpenStreetMap) %>%
+      addPolygons(
+        fillColor = ~ pal(percentage_occupancy),
+        weight = 2,
+        opacity = 1,
+        color = "white",
+        dashArray = "3",
+        fillOpacity = 0.7,
+        highlight = highlightOptions(
+          weight = 5,
+          color = "#666",
+          dashArray = "",
+          fillOpacity = 0.7,
+          bringToFront = TRUE),
+        label = paste0(merged$hb_name, ":", " ", round(merged$percentage_occupancy), "%"),
+        labelOptions = labelOptions(
+          style = list("font-weight" = "normal", padding = "3px 8px"),
+          textsize = "15px",
+          direction = "auto"),
+        popup = paste0(merged$hb_name, ":", " ", round(merged$percentage_occupancy, digits = 2), "%")) %>%
+      leaflet::addLegend("topleft", pal = pal, values = ~percentage_occupancy,
+                         title = "Bed Occupancy",
+                         opacity = 1)
+
   })
 
-  # placeholder plot
-  output$neurology_plot <- renderPlot({
-    activity_specialty %>%
-      filter(specialty_name == "Neurology") %>%
-      ggplot(aes(quarter)) +
-      geom_histogram(stat = "count")
+  # Summer map
+  output$map_summer <- renderPlot({
+
+    filtered_beds <- map_beds %>%
+      filter(year == 2020,
+             winter_flag == "Summer")
+
+    merged <- sp::merge(shapes, filtered_beds) %>%
+      select(hb_name, percentage_occupancy, geometry)
+
+    pal <- colorBin("BuPu", domain = merged$percentage_occupancy)
+
+    merged %>%
+      leaflet() %>%
+      addTiles() %>%
+      addProviderTiles(providers$OpenStreetMap) %>%
+      addPolygons(
+        fillColor = ~ pal(percentage_occupancy),
+        weight = 2,
+        opacity = 1,
+        color = "white",
+        dashArray = "3",
+        fillOpacity = 0.7,
+        highlight = highlightOptions(
+          weight = 5,
+          color = "#666",
+          dashArray = "",
+          fillOpacity = 0.7,
+          bringToFront = TRUE),
+        label = paste0(merged$hb_name, ":", " ", round(merged$percentage_occupancy), "%"),
+        labelOptions = labelOptions(
+          style = list("font-weight" = "normal", padding = "3px 8px"),
+          textsize = "15px",
+          direction = "auto"),
+        popup = paste0(merged$hb_name, ":", " ", round(merged$percentage_occupancy, digits = 2), "%")) %>%
+      leaflet::addLegend("topleft", pal = pal, values = ~percentage_occupancy,
+                         title = "Bed Occupancy",
+                         opacity = 1)
   })
 
 
-# COVID tab --------------------------------------------------------------------
+  # COVID tab --------------------------------------------------------------------
 
   # Date slider (reactive())
   quart <- reactive({
@@ -31,7 +93,7 @@ server <- function(input, output) {
   })
 
   # Action button
-  action_but <- eventReactive(input$update,{
+  action_but <- eventReactive(input$update, ignoreNULL = FALSE, {
     clean_admissions %>%
       filter(date %in% quart(),
              specialty_name %in% input$specialty_input,
@@ -54,7 +116,7 @@ server <- function(input, output) {
 
   # placeholder plot
   output$dermatology_plot <- renderPlot({
-    activity_specialty %>%
+    clean_beds %>%
       filter(specialty_name == "Dermatology") %>%
       ggplot(aes(quarter)) +
       geom_histogram(stat = "count")
@@ -62,20 +124,22 @@ server <- function(input, output) {
 
 
   # placeholder text field
-    output$icu_text_placeholder <- renderText({
-      print("this is a placeholder text for the description of the plot in the ICU tab")
-    })
+  output$icu_text_placeholder <- renderText({
+    print("this is placeholder text for the description of the plot in the COVID tab")
+  })
 
-# placeholder input for the A&E tab --------------------------------------------
+  # A&E tab --------------------------------------------------------------------
 
-    date_react <- reactive({
-      seq(input$ae_date_range[1],
-          input$ae_date_range[2],
-          by = 1)
-    })
+  # action button
+  date_react <- reactive({
+    seq(input$ae_date_range[1],
+        input$ae_date_range[2],
+        by = 1)
+  })
 
-    filtered_clean_ae <- eventReactive(input$update_ae_button, {
-      clean_ae %>%
+  # interactivity for buttons
+  filtered_clean_ae <- eventReactive(input$update_ae_button, {
+    clean_ae %>%
       select(date, month, year, hbt, department_type, var = input$selecty) %>%
       filter(department_type == input$department_type) %>%
       filter(date %in% date_react())
@@ -116,8 +180,8 @@ server <- function(input, output) {
         ggtitle("A&E Attendances Each Year, By Season") +
         theme_classic() +
         theme(plot.title = element_text(size = 16, hjust = 0.5)) +
-        scale_x_continuous(breaks = 2007:2021) 
-        
+        scale_x_continuous(breaks = 2007:2021)
+
         })
 
     # placeholder text
@@ -159,5 +223,10 @@ server <- function(input, output) {
     output$stat_text <- renderText({
       print("A discussion of the p-value etc here")
     })
+
+  # placeholder text
+  output$stat_text <- renderText({
+    print("text can go here if we like")
+  })
 
 }
