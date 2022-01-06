@@ -33,7 +33,7 @@ new_clean_ae <- clean_ae %>%
 new_admissions <- clean_admissions %>% 
   filter(hb != "Scotland")
 
-# To filter out below
+# Needed to filter out below
 `%!in%` <- negate(`%in%`)
 
 specialties <- clean_admissions %>% 
