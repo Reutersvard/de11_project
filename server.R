@@ -85,7 +85,7 @@ server <- function(input, output) {
   })
 
 
-  # COVID tab --------------------------------------------------------------------
+  # Hospital admissions tab --------------------------------------------------------------------
 
   # Date slider (reactive())
   quart <- reactive({
@@ -141,9 +141,11 @@ server <- function(input, output) {
   })
 
 
-  # placeholder text field
-  output$icu_text_placeholder <- renderText({
-    print("this is placeholder text for the description of the plot in the COVID tab")
+  # hospital text
+  output$hosp_text <- renderText({
+    print("A Consultant Episode is the time a patient spends in the continuous
+          care of one consultant using Hospital Site of one Health Care Provider. 
+          A spell can contain multiple episodes.")
   })
 
   # A&E tab --------------------------------------------------------------------
@@ -207,9 +209,9 @@ server <- function(input, output) {
       print("this is a placeholder text for the description of the plot in the A&E tab")
     })
 
-# Demo tab -------
+  # Demographics tab -----------------------------------------------------------
 
-# Date
+# Date slider
 date_range <- reactive({
   seq(input$date_range[1], input$date_range[2], by = 1)
 })
