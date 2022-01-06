@@ -75,7 +75,7 @@ body <- dashboardBody(
                             selectInput("hb_input",
                                         "Health Board",
                                         choices =
-                                          unique(new_admissions$hb),
+                                          unique(clean_admissions$hb),
                                         selected = "Tayside")
             ),
             column(width = 3,
