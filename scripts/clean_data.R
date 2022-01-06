@@ -17,9 +17,9 @@ map_beds <- beds_specialty %>%
   summarise(percentage_occupancy = mean(percentage_occupancy)) %>% 
   mutate(hb_name = case_when(
     hb == "S92000003" ~ "Scotland",
-    hb == "S08000015" ~ "Ayrshire & Arran",
+    hb == "S08000015" ~ "Ayrshire and Arran",
     hb == "S08000016" ~ "Borders",
-    hb == "S08000017" ~ "Dumfries & Galloway",
+    hb == "S08000017" ~ "Dumfries and Galloway",
     hb == "S08000019" ~ "Forth Valley",
     hb == "S08000020" ~ "Grampian",
     hb == "S08000022" ~ "Highland",
@@ -29,10 +29,10 @@ map_beds <- beds_specialty %>%
     hb == "S08000028" ~ "Western Isles",
     hb == "S08000029" ~ "Fife",
     hb == "S08000030" ~ "Tayside",
-    hb == "S08000031" ~ "Greater Glasgow & Clyde",
+    hb == "S08000031" ~ "Greater Glasgow and Clyde",
     hb == "S08000032" ~ "Lanarkshire",
     hb == "S08000018" ~ "Fife",
-    hb == "S08000031" ~ "Greater Glasgow & Clyde",
+    hb == "S08000031" ~ "Greater Glasgow and Clyde",
     hb == "S08000027" ~ "Tayside",
     TRUE ~ as.character(NA))) %>% 
   filter(!is.na(hb_name)) %>% 
