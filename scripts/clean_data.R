@@ -92,4 +92,4 @@ admissions <- read_csv("raw_data/activity_specialty.csv") %>%
   filter(!is.na(hb))
 
 write_csv(admissions, "clean_data/clean_admissions.csv")
-rm(admissions)
+rm(admissions, ae)
