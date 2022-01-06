@@ -126,6 +126,7 @@ server <- function(input, output) {
            y = "Numbers of Episodes") +
       ggtitle("Specialty by Health Board") +
       theme_nhs()
+
   })
 
   # Scotland plot
@@ -138,13 +139,14 @@ server <- function(input, output) {
            y = "Numbers of Episodes") +
       ggtitle("Episodes Across Scotland") +
       theme_nhs()
+
   })
 
 
   # hospital text
   output$hosp_text <- renderText({
-    print("A Consultant Episode is the time a patient spends in the continuous
-          care of one consultant using Hospital Site of one Health Care Provider. 
+    print("An Episode is the time a patient spends in the continuous
+          care of one consultant using a Hospital Site of one Health Care Provider. 
           A spell can contain multiple episodes.")
   })
 
