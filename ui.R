@@ -28,24 +28,24 @@ body <- dashboardBody(
               column(width = 2,
                  br(),
                  radioButtons("season_left", "Season for left",
-                               choices = unique(map_beds$winter_flag))),
+                               choices = unique(clean_beds$winter_flag))),
               
              column(width = 2,
                  br(),
                  selectInput("year_left", "Year for left",
-                              choices = unique(map_beds$year))),
+                              choices = unique(clean_beds$year))),
              
              column(width = 2),
                      
              column(width = 2,
                     br(),
                     radioButtons("season_right", "Season for right",
-                                 choices = unique(map_beds$winter_flag))),
+                                 choices = unique(clean_beds$winter_flag))),
              
              column(width = 2,
                     br(),
                     selectInput("year_right", "Year for right",
-                                choices = unique(map_beds$year))),
+                                choices = unique(clean_beds$year))),
              
              
              column(width = 1)),

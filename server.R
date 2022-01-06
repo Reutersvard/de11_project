@@ -6,7 +6,7 @@ server <- function(input, output) {
   output$map_left <- renderLeaflet({
 
     # Filter for the buttons
-    filtered_beds <- map_beds %>%
+    filtered_beds <- clean_beds %>%
       filter(year == input$year_left,
              winter_flag == input$season_left)
     
@@ -47,7 +47,7 @@ server <- function(input, output) {
   # Right map
   output$map_right <- renderLeaflet({
 
-    filtered_beds <- map_beds %>%
+    filtered_beds <- clean_beds %>%
       filter(year == input$year_right,
              winter_flag == input$season_right)
 
@@ -211,7 +211,7 @@ server <- function(input, output) {
 
     #  The null distribution
     output$neurology_plot <- renderPlot({
-      map_beds %>%
+      clean_beds %>%
         ggplot(aes(year)) +
         geom_histogram(stat = "count")
     })
