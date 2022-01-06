@@ -178,23 +178,49 @@ body <- dashboardBody(
     # navigation for demographics tab
     tabItem(tabName = "demo",
 
-            # element for the left column
+            # space between the top bar and the main page
             br(),
-            fluidRow(column(width = 4,
-                     radioButtons("plot_input",
-                                  "Select plot type",
-                                  choices = c("Box plot", "Histogram"))
-                    ),
-
-              # this is a placeholder plot
-              column(width = 8,
-                     plotOutput("neurology_plot"),
-                     textOutput("stat_text")
-                     )
+            
+            # element for the top row
+            fluidRow(column(width = 3,
+                            br(),
+                            selectInput("hb_name_input",
+                                        "Health Board",
+                                        choices =
+                                          unique(clean_inpatient$hb_name),
+                                        selected = "Scotland")
+            ),
+            column(width = 3,
+                   br(),
+                   checkboxGroupInput("checkGroup", 
+                                      "Age Group", 
+                                      choices = unique(clean_inpatient$grouped_age),
+                                      selected = c("0-19", "20-49", "50-69", "70 and over"))
+            ),
+            column(width = 3,
+                   br(),
+                   sliderInput("date_range", label = "Date Range",
+                               min = as.Date("2016-04-01","%Y-%m-%d"),
+                               max = as.Date("2021-04-01","%Y-%m-%d"),
+                               value = c(as.Date("2016-01-01"),
+                                         as.Date("2021-04-01")),
+                               timeFormat="%Y-%m",
+                               step = 90,
+                               ticks = FALSE
+                   )
+            ),
+            column(width = 3,
+                   br(),
+                   actionButton("update_demo",
+                                "Apply Changes")
             )
+            ),
+            br(),
+            plotOutput("length_of_stay_plot")
+    )
     )
   )
-)
+
 
 # Main dashboard and CSS -------------------------------------------------------
 dashboardPage(skin = "purple",
