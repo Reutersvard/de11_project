@@ -102,6 +102,16 @@ server <- function(input, output) {
                                    "Emergency Inpatients",
                                    "Transfers"))
   })
+  
+  action_but2 <- eventReactive(input$update, ignoreNULL = FALSE, {
+    clean_admissions %>%
+      filter(date %in% quart(),
+             specialty_name %in% input$specialty_input,
+             hb %in% "Scotland",
+             admission_type %in% c("Elective Inpatients",
+                                   "Emergency Inpatients",
+                                   "Transfers"))
+  })
 
   # admissions_episodes_plot - final plot
   output$admissions_episodes_plot <- renderPlot({
@@ -116,9 +126,10 @@ server <- function(input, output) {
 
   # placeholder plot
   output$dermatology_plot <- renderPlot({
-    map_beds %>%
-      ggplot(aes(year)) +
-      geom_histogram(stat = "count")
+    action_but2() %>%
+      ggplot(aes(x = date, y = episodes, col = admission_type)) +
+      geom_point() +
+      geom_line()
   })
 
 
