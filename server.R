@@ -102,6 +102,16 @@ server <- function(input, output) {
                                    "Emergency Inpatients",
                                    "Transfers"))
   })
+  
+  action_but2 <- eventReactive(input$update, ignoreNULL = FALSE, {
+    clean_admissions %>%
+      filter(date %in% quart(),
+             specialty_name %in% input$specialty_input,
+             hb %in% "Scotland",
+             admission_type %in% c("Elective Inpatients",
+                                   "Emergency Inpatients",
+                                   "Transfers"))
+  })
 
   # admissions_episodes_plot - final plot
   output$admissions_episodes_plot <- renderPlot({
@@ -116,9 +126,10 @@ server <- function(input, output) {
 
   # placeholder plot
   output$dermatology_plot <- renderPlot({
-    map_beds %>%
-      ggplot(aes(year)) +
-      geom_histogram(stat = "count")
+    action_but2() %>%
+      ggplot(aes(x = date, y = episodes, col = admission_type)) +
+      geom_point() +
+      geom_line()
   })
 
 
@@ -188,39 +199,13 @@ server <- function(input, output) {
       print("this is a placeholder text for the description of the plot in the A&E tab")
     })
 
-# Statistics tab ---------------------------------------------------------------
-
-    # placeholder plot
-    output$some_plot <- renderPlot({
-      clean_beds %>%
-        filter(hb == "S92000003") %>%
-        ggplot(aes(quarter, percentage_occupancy)) +
-        geom_col()
-    })
-
-    #  # The histogram
-    # output$some_plot <- renderPlot({
-    #   ICU_quarter %>%
-    #     ggplot(aes(n, quarter)) +
-    #     geom_boxplot()
-    # })
-
+# Demographics tab ---------------------------------------------------------------
 
     #  The null distribution
-    output$null_plot <- renderPlot({
-      clean_beds %>%
-        filter(hb == "S92000003") %>%
-        specify(percentage_occupancy ~ winter_flag) %>%
-        hypothesise(null = "independence") %>%
-        generate(reps = 10000, type = "permute") %>%
-        calculate(stat = "diff in means", order = c("yes", "no")) %>%
-        visualise() +
-        shade_pvalue(obs_stat = 70.575, direction =  "right")
-    })
-
-    # placeholder text
-    output$stat_text <- renderText({
-      print("A discussion of the p-value etc here")
+    output$neurology_plot <- renderPlot({
+      map_beds %>%
+        ggplot(aes(year)) +
+        geom_histogram(stat = "count")
     })
 
   # placeholder text

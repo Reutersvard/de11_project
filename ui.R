@@ -6,18 +6,7 @@ sidebar <- dashboardSidebar(
     menuItem("Overview", tabName = "overview", icon = icon("globe")),
     menuItem("COVID Insights", tabName = "covid", icon = icon("virus")),
     menuItem("A&E Admissions", tabName = "ae", icon = icon("chart-line")),
-    menuItem("Demographics", tabName = "demo", icon = icon("poll")),
-    setSliderColor(c("#7CB342", "#7CB342", "#7CB342", "#7CB342"), c(1, 2, 3, 4)),
-    sliderInput("date_range", label = "Date Range",
-                min = as.Date("2016-01-01","%Y-%m-%d"),
-                max = as.Date("2021-12-31","%Y-%m-%d"),
-                value = c(as.Date("2016-01-01"),
-                          as.Date("2021-12-31")),
-                timeFormat="%Y-%m",
-                width = "85%",
-                step = 90),
-    actionButton("applyButton",
-                 "Apply Changes")
+    menuItem("Demographics", tabName = "demo", icon = icon("poll"))
   )
 )
 
@@ -86,8 +75,8 @@ body <- dashboardBody(
                             selectInput("hb_input",
                                         "Health Board",
                                         choices =
-                                          unique(clean_admissions$hb),
-                                        selected = "Scotland")
+                                          unique(new_admissions$hb),
+                                        selected = "Tayside")
             ),
             column(width = 3,
                    br(),
