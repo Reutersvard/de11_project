@@ -1,7 +1,7 @@
 server <- function(input, output) {
 
 # Overview tab -----------------------------------------------------------------
-  
+
   # Left map
   output$map_left <- renderLeaflet({
 
@@ -9,7 +9,7 @@ server <- function(input, output) {
     filtered_beds <- clean_beds %>%
       filter(year == input$year_left,
              winter_flag == input$season_left)
-    
+
     merged <- sp::merge(shapes, filtered_beds) %>%
       select(hb_name, percentage_occupancy, geometry)
 
@@ -102,7 +102,7 @@ server <- function(input, output) {
                                    "Emergency Inpatients",
                                    "Transfers"))
   })
-  
+
   action_but2 <- eventReactive(input$update, ignoreNULL = FALSE, {
     clean_admissions %>%
       filter(date %in% quart(),
@@ -207,18 +207,29 @@ server <- function(input, output) {
       print("this is a placeholder text for the description of the plot in the A&E tab")
     })
 
-# Demographics tab ---------------------------------------------------------------
+# Demo tab -------
 
-    #  The null distribution
-    output$neurology_plot <- renderPlot({
-      clean_beds %>%
-        ggplot(aes(year)) +
-        geom_histogram(stat = "count")
-    })
+# Date
+date_range <- reactive({
+  seq(input$date_range[1], input$date_range[2], by = 1)
+})
 
-  # placeholder text
-  output$stat_text <- renderText({
-    print("text can go here if we like")
-  })
+# Action button
+action_button <- eventReactive(input$update_demo, ignoreNULL = FALSE, {
+  clean_inpatient %>%
+    filter(quarter %in% date_range(),
+           hb_name %in% input$hb_name_input,
+           admission_type %in% input$admission_input
+             ) %>%
+    group_by(grouped_age, quarter) %>%
+    summarise(average_length_of_stay = mean(average_length_of_stay))
+})
 
+# length of stay plot
+output$length_of_stay_plot <- renderPlot({
+  action_button() %>%
+    ggplot(aes(quarter, average_length_of_stay)) +
+    geom_line() +
+    facet_wrap(~ grouped_age)
+})
 }
