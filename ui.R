@@ -31,39 +31,38 @@ body <- dashboardBody(
             # space between the top bar and the main page
             br(),
             
-            # element for the top row
-            fluidRow(column(width = 3,
+            # Widgets for the maps
+            fluidRow(column(width = 2,
                             br(),
-                            radioButtons("season", "Season",
+                            radioButtons("season_left", "Season for left",
                                          choices = c("Summer", "Winter"))),
-                     column(width = 3,
+                     column(width = 2,
                             br(),
-                            sliderInput("date_range", label = "Date Range",
-                                        min = as.Date("2016-01-01","%Y-%m-%d"),
-                                        max = as.Date("2021-12-31","%Y-%m-%d"),
-                                        value = c(as.Date("2016-01-01"),
-                                                  as.Date("2021-12-31")),
-                                        timeFormat="%Y-%m",
-                                        step = 90
-                            )
-                     ),
-                     column(width = 3,
+                            selectInput("year_left", "Year for left",
+                                        choices = unique(map_beds$year))),
+                     
+                     column(width = 4),
+                     
+                     column(width = 2,
                             br(),
-                            actionButton("applyButton",
-                                         "Apply Changes")
-                     )
+                            radioButtons("season_right", "Season for right",
+                                         choices = c("Summer", "Winter"))),
+                     column(width = 2,
+                            br(),
+                            selectInput("year_right", "Year for right",
+                                        choices = unique(map_beds$year)))
             ),
             
-            # element for the main row, first half - beds_percentage_plot and will become a leaflet plot
+            # Left map
             fluidRow(column(width = 6,
                             br(),
-                            leafletOutput("map_winter")
+                            leafletOutput("map_left")
             ),
             
-            # creates the element for the main row, second half - (this is a placeholder plot)
+            # Right map
             column(width = 6,
                    br(),
-                   leafletOutput("map_summer")
+                   leafletOutput("map_right")
             )
             ),
     ),

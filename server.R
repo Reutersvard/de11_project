@@ -2,8 +2,8 @@ server <- function(input, output) {
   
 # Overview tab -----------------------------------------------------------------
   
-  # Winter map
-  output$map_winter <- renderPlot({
+  # Left map
+  output$map_left <- renderPlot({
 
     # Soon to become interactive
     filtered_beds <- map_beds %>%
@@ -45,7 +45,7 @@ server <- function(input, output) {
   })
 
   # Summer map
-  output$map_summer <- renderPlot({
+  output$map_right <- renderPlot({
 
     filtered_beds <- map_beds %>%
       filter(year == 2020,
