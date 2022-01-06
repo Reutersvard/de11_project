@@ -213,7 +213,7 @@ body <- dashboardBody(
             ),
             column(width = 3,
                    br(),
-                   actionButton("update",
+                   actionButton("update_demo",
                                 "Apply Changes")
             )
             ),

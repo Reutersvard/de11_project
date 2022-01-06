@@ -199,30 +199,15 @@ server <- function(input, output) {
       print("this is a placeholder text for the description of the plot in the A&E tab")
     })
 
-# Demographics tab ---------------------------------------------------------------
-
-    #  The null distribution
-    output$neurology_plot <- renderPlot({
-      map_beds %>%
-        ggplot(aes(year)) +
-        geom_histogram(stat = "count")
-    })
-
-  # placeholder text
-  output$stat_text <- renderText({
-    print("text can go here if we like")
-  })
-
-
 # Demo tab -------
 
 # Date 
 date_range <- reactive({
-  seq(input$coivd_date_range[1], input$coivd_date_range[2], by = 1)
+  seq(input$date_range[1], input$date_range[2], by = 1)
 })
 
 # Action button
-action_button <- eventReactive(input$update, ignoreNULL = FALSE, {
+action_button <- eventReactive(input$update_demo, ignoreNULL = FALSE, {
   clean_inpatient %>%
     filter(quarter %in% date_range(),
            hb_name %in% input$hb_name_input,
@@ -236,6 +221,7 @@ action_button <- eventReactive(input$update, ignoreNULL = FALSE, {
 output$length_of_stay_plot <- renderPlot({
   action_button() %>%
     ggplot(aes(quarter, average_length_of_stay)) +
-    geom_line()
+    geom_line() +
+    facet_wrap(~ grouped_age)
 })
 }
