@@ -12,7 +12,7 @@ The main points the team were:
 
 Data was sourced from Public Health Scotland.
 
-### Names of group members
+### Team Members
 
 Malcom Cheyne, Pui KS, Jonny Nelson, Ricardo P, Louise Shambrook, all from CodeClan DE11 Data Analysis cohort.
 
@@ -59,6 +59,11 @@ Developing the style and theme
 ### Brief description of dashboard
 
 The dashboard contains four tabs which display data on different topics:
+
+* Bed Occupancy
+* Hospital Admissions
+* A&E Attendances
+* Demographics
 
 Our topic is ...
 
