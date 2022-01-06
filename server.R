@@ -126,6 +126,7 @@ server <- function(input, output) {
            y = "Numbers of Episodes") +
       ggtitle("Specialty by Health Board") +
       theme_nhs()
+
   })
 
   # Scotland plot
@@ -138,14 +139,15 @@ server <- function(input, output) {
            y = "Numbers of Episodes") +
       ggtitle("Episodes Across Scotland") +
       theme_nhs()
+
   })
 
 
   # hospital text
   output$hosp_text <- renderText({
-    print("A Consultant Episode is the time a patient spends in the continuous
-          care of one consultant using Hospital Site of one Health Care Provider. 
-          A spell can contain multiple episodes.")
+    br()
+    print("An episode is the time that a patient spends in the continuous
+          care of one consultant, in one hospital under the same Health Board.")
   })
 
   # A&E tab --------------------------------------------------------------------
@@ -227,7 +229,7 @@ action_button <- eventReactive(input$update_demo, ignoreNULL = FALSE, {
            grouped_age %in% input$checkGroup
              ) %>%
     group_by(grouped_age, quarter) %>%
-    summarise(average_length_of_stay = mean(average_length_of_stay))
+    summarise(average_length_of_stay = mean(average_length_of_stay, na.rm = T))
 })
 
 # length of stay plot
