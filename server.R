@@ -3,13 +3,13 @@ server <- function(input, output) {
 # Overview tab -----------------------------------------------------------------
   
   # Left map
-  output$map_left <- renderPlot({
+  output$map_left <- renderLeaflet({
 
     # Soon to become interactive
     filtered_beds <- map_beds %>%
       filter(year == 2020,
              winter_flag == "Winter")
-
+    
     merged <- sp::merge(shapes, filtered_beds) %>%
       select(hb_name, percentage_occupancy, geometry)
 
@@ -44,8 +44,8 @@ server <- function(input, output) {
 
   })
 
-  # Summer map
-  output$map_right <- renderPlot({
+  # Right map
+  output$map_right <- renderLeaflet({
 
     filtered_beds <- map_beds %>%
       filter(year == 2020,
