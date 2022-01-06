@@ -83,7 +83,7 @@ body <- dashboardBody(
                    selectInput("specialty_input",
                                "Speciality",
                                choices =
-                                 unique(clean_admissions$specialty_name),
+                                 unique(specialties$specialty_name),
                                selected = "Infectious Diseases")
             ),
             column(width = 3,

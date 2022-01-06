@@ -32,3 +32,7 @@ new_clean_ae <- clean_ae %>%
 
 new_admissions <- clean_admissions %>% 
   filter(hb != "Scotland")
+
+specialties <- clean_admissions %>% 
+  select(specialty_name) %>% 
+  arrange(specialty_name)
