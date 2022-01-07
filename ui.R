@@ -185,7 +185,7 @@ body <- dashboardBody(
             br(),
             
             # element for the top row
-            fluidRow(column(width = 3,
+            fluidRow(column(width = 2,
                             br(),
                             selectInput("hb_name_input",
                                         "Health Board",
@@ -193,12 +193,19 @@ body <- dashboardBody(
                                           unique(clean_inpatient$hb_name),
                                         selected = "Scotland")
             ),
-            column(width = 3,
+            column(width = 2,
                    br(),
                    checkboxGroupInput("checkGroup", 
                                       "Age Group", 
                                       choices = unique(clean_inpatient$grouped_age),
                                       selected = c("0-19", "20-49", "50-69", "70 and over"))
+            ),
+            column(width = 3,
+                   br(),
+                   checkboxGroupInput("admission_input",
+                               "Admission Type",
+                               choices = c("Elective Inpatients", "Emergency Inpatients"),
+                               selected = c("Elective Inpatients", "Emergency Inpatients"))
             ),
             column(width = 3,
                    br(),
@@ -212,7 +219,8 @@ body <- dashboardBody(
                                ticks = FALSE
                    )
             ),
-            column(width = 3,
+            column(width = 2,
+                   br(),
                    br(),
                    actionButton("update_demo",
                                 "Apply Changes")

@@ -225,7 +225,7 @@ action_button <- eventReactive(input$update_demo, ignoreNULL = FALSE, {
   clean_inpatient %>%
     filter(quarter %in% date_range(),
            hb_name %in% input$hb_name_input,
-           admission_type == "All Inpatients and Day cases",
+           admission_type %in% input$admission_input,
            grouped_age %in% input$checkGroup
              ) %>%
     group_by(grouped_age, quarter) %>%
@@ -238,10 +238,10 @@ output$length_of_stay_plot <- renderPlot({
     ggplot(aes(quarter, average_length_of_stay, col = grouped_age)) +
     geom_line() +
     geom_point() +
-    labs( x = "Date",
-          y = "Average length of stay",
+    labs( x = "Year",
+          y = "Days",
           col = "Age Group") +
-    ggtitle("Length of stay by year") +
+    ggtitle("Average Length of Stay Per Quarter - Emergency Inpatients") +
     theme_nhs()
 })
 }
