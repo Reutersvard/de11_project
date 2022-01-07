@@ -68,7 +68,8 @@ Developing the style and theme
 * Git branching & version control
 * Adding plots and functionality to the dashboard
 
-## add Trello screenshot
+## Trello board
+![Trello] (images/trello.png)
 
 ## Which tools and packages were used in the project
 
@@ -91,7 +92,17 @@ lubridate
 rmapshaper
 
 ## Screenshots
-###
+### Bed Occupancy
+![Bed Occupancy Tab] (images/bed_occupancy.png)
+
+### Hospital Admissions
+![Hospital Admissions Tab] (images/hospital_admissions.png)
+
+### A & E Admissions
+![A & E Admissions Tab] (images/ae_admissions.png)
+
+### Demographics
+![Demographics] (images/demograhics.png)
 
 ## References
 
