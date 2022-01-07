@@ -68,7 +68,7 @@ Developing the style and theme
 * Git branching & version control
 * Adding plots and functionality to the dashboard
 
-![Trello] (images/trello.png)
+![Trello](images/trello.png)
 
 ## Which tools and packages were used in the project
 
@@ -92,16 +92,16 @@ rmapshaper
 
 ## Screenshots
 ### Bed Occupancy
-![Bed Occupancy Tab] (images/bed_occupancy.png)
+![Bed Occupancy Tab](images/bed_occupancy.png)
 
 ### Hospital Admissions
-![Hospital Admissions Tab] (images/hospital_admissions.png)
+![Hospital Admissions Tab](images/hospital_admissions.png)
 
 ### A & E Admissions
-![A & E Admissions Tab] (images/ae_admissions.png)
+![A & E Admissions Tab](images/ae_admissions.png)
 
 ### Demographics
-![Demographics] (images/demograhics.png)
+![Demographics](images/demograhics.png)
 
 ## References
 
@@ -111,3 +111,5 @@ https://www.opendata.nhs.scot/dataset/hospital-beds-information - Beds by Specia
 https://www.opendata.nhs.scot/dataset/inpatient-and-daycase-activity/resource/00c00ecc-b533-426e-a433-42d79bdea5d4 - Length of stays
 https://www.opendata.nhs.scot/dataset/inpatient-and-daycase-activity/resource/c3b4be64-5fb4-4a2f-af41-b0012f0a276a - Hospital admissions by Specialty
 https://www.spatialdata.gov.scot/geonetwork/srv/api/records/f12c3826-4b4b-40e6-bf4f-77b9ed01dc14 - Shape file used to plot health board regions
+
+
