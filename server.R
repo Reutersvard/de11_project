@@ -241,7 +241,7 @@ output$length_of_stay_plot <- renderPlot({
     labs( x = "Year",
           y = "Days",
           col = "Age Group") +
-    ggtitle("Average Length of Stay Per Quarter - Emergency Inpatients") +
+    ggtitle("Average Length of Stay Per Quarter") +
     theme_nhs()
 })
 }
