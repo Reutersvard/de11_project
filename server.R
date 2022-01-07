@@ -207,6 +207,7 @@ server <- function(input, output) {
 
     # placeholder text
     output$ae_stats_text <- renderUI({
+      br()
       HTML("The percentage change year over year for winter months
             in the emergency departments is 39% whereas for summer it is 23%. 
             The difference in the compounded annual growth rate is 16%,
