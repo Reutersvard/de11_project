@@ -68,7 +68,6 @@ Developing the style and theme
 * Git branching & version control
 * Adding plots and functionality to the dashboard
 
-## Trello board
 ![Trello] (images/trello.png)
 
 ## Which tools and packages were used in the project
