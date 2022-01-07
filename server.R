@@ -207,10 +207,10 @@ server <- function(input, output) {
 
     # placeholder text
     output$ae_stats_text <- renderUI({
-      HTML("Assumption: <br>  <ul><li> Winter Months: 1 , 2 , 3 ,10 ,11 ,12 </li><li> Summer Months: 4 , 5 , 6 , 7 , 8 , 9 </li></ul>  The percentage change year over year for winter months
+      HTML("The percentage change year over year for winter months
             in the emergency departments is 39% whereas for summer it is 23%. 
-            The difference in the compounded annual growth rate (CAGR) is 16%,
-            building towards continued winter crisises going forward")
+            The difference in the compounded annual growth rate is 16%,
+            building towards continued winter crises going forward")
     })
 
   # Demographics tab -----------------------------------------------------------
