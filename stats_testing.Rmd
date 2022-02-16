@@ -1,0 +1,183 @@
+---
+title: "Stats Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r include = FALSE}
+library(tidyverse)
+library(janitor)
+library(infer)
+library(lubridate)
+```
+
+### Data cleaning and preparation
+
+```{r}
+clean_beds <- read_csv("raw_data/beds_specialty.csv") %>%
+  clean_names() %>% 
+  filter(location_qf == "d") %>%
+  mutate(year = year(yq(quarter)),
+         quarter = str_sub(quarter, -2),
+         winter_flag = if_else(
+           quarter %in% c("Q1", "Q4"), "Winter", "Summer")) %>%
+  select(year, winter_flag, hb, specialty_name, percentage_occupancy) %>%
+  group_by(winter_flag, year, hb) %>%
+  summarise(percentage_occupancy = mean(percentage_occupancy)) %>%
+  mutate(hb_name = case_when(
+    hb == "S92000003" ~ "Scotland",
+    hb == "S08000015" ~ "Ayrshire and Arran",
+    hb == "S08000016" ~ "Borders",
+    hb == "S08000017" ~ "Dumfries and Galloway",
+    hb == "S08000019" ~ "Forth Valley",
+    hb == "S08000020" ~ "Grampian",
+    hb == "S08000022" ~ "Highland",
+    hb == "S08000024" ~ "Lothian",
+    hb == "S08000025" ~ "Orkney",
+    hb == "S08000026" ~ "Shetland",
+    hb == "S08000028" ~ "Western Isles",
+    hb == "S08000029" ~ "Fife",
+    hb == "S08000030" ~ "Tayside",
+    hb == "S08000031" ~ "Greater Glasgow and Clyde",
+    hb == "S08000032" ~ "Lanarkshire",
+    TRUE ~ as.character(NA))) %>%
+  filter(!is.na(hb_name)) %>%
+  rename(hb_code = hb)
+
+clean_beds
+```
+
+#### Calculate mean percentage occupancy across Scotland for winter (Q1, Q4) and summer (Q2, Q3) months.
+
+```{r}
+wint_av <- clean_beds %>%
+  filter(hb_name == "Scotland", winter_flag == "Winter") %>%
+  group_by(winter_flag) %>% 
+  summarise(av_occupancy = mean(percentage_occupancy)) %>% pull()
+
+summer_av <- clean_beds %>%
+  filter(hb_name == "Scotland", winter_flag == "Summer") %>%
+  group_by(winter_flag) %>% 
+  summarise(av_occupancy = mean(percentage_occupancy)) %>% pull()
+
+# The difference of averages
+obs_stat = wint_av - summer_av
+
+wint_av
+summer_av
+obs_stat
+```
+
+### Statistical Analysis
+
+#### Confidence intervals
+
+Let us visualise the confidence intervals if we bootsrap the average values of occupancy for winter and summer.
+```{r}
+# All of Scotland, winter quarters
+occupancy_resample <- clean_beds %>%
+  filter(hb_code == "S92000003", winter_flag == "Winter") %>% 
+  specify(response = percentage_occupancy) %>%
+  generate(reps = 10000, type = "bootstrap") %>%
+  calculate(stat = "mean")
+
+occupancy_ci <- occupancy_resample %>%
+  get_confidence_interval(level = 0.95, type = "percentile")
+
+occupancy_resample %>%
+  visualise(bins = 30) +
+  shade_confidence_interval(endpoints = occupancy_ci)
+```
+
+```{r}
+# All of Scotland, summer quarters
+occupancy_resample <- clean_beds %>%
+  filter(hb_code == "S92000003", winter_flag == "Summer") %>% 
+  specify(response = percentage_occupancy) %>%
+  generate(reps = 10000, type = "bootstrap") %>%
+  calculate(stat = "mean")
+
+occupancy_ci <- occupancy_resample %>%
+  get_confidence_interval(level = 0.95, type = "percentile")
+
+occupancy_resample %>%
+  visualise(bins = 30) +
+  shade_confidence_interval(endpoints = occupancy_ci)
+```
+
+#### Hypothesis: bed occupancy is greater in winter.
+
+The difference in average occupancy between winter and summer seems statistically significant. Let us generate a null distribution via permutation. $H_0$ is that the difference in average occupancy is **not** statistically significant. Assume that $\alpha = 0.05$ i.e. we will take the result as showing that the difference is statistically significant if the found $p$ value is smaller than $\alpha$.
+
+```{r warning = F}
+clean_beds %>% 
+  specify(percentage_occupancy ~ winter_flag) %>% 
+  hypothesise(null = "independence") %>% 
+  generate(reps = 10000, type = "permute") %>% 
+  calculate(stat = "diff in means", order = c("Winter", "Summer")) %>% 
+  visualise() +
+  shade_pvalue(obs_stat = obs_stat, direction =  "right")
+```
+
+```{r}
+clean_beds %>% 
+  specify(percentage_occupancy ~ winter_flag) %>% 
+  hypothesise(null = "independence") %>% 
+  generate(reps = 10000, type = "permute") %>% 
+  calculate(stat = "diff in means", order = c("Winter", "Summer")) %>% 
+  get_pvalue(obs_stat = obs_stat, direction =  "right")
+```
+
+### Interpretation of analyis
+
+As the $p$ value is smaller than the established significance value $\alpha$ we reject $H_0$ to conclude that the difference in average bed occupancy between winter and summer in Scotland is statistically significant.
+
+
+# A&E Attendance data preparation
+
+Let us look at the number of people waiting in A&E for longer than 8 hours.
+```{r}
+clean_ae <-read_csv("clean_data/clean_ae.csv")
+clean_ae %>%
+  filter(year > 2017) %>%
+  group_by(month, year) %>%
+  summarise(attendance = sum(attendance_greater8hrs, na.rm = T)) %>% 
+  ggplot(aes(month, attendance, fill = factor(year), col = factor(year))) +
+  geom_point() +
+  geom_line()
+```
+
+```{r}
+ae_stats <- clean_ae %>%
+  filter(year > 2007, department_type == "Emergency Department") %>% 
+  group_by(month, year) %>%
+  summarise(attendance = sum(attendance_greater8hrs, na.rm = T)) %>%
+  # Create a winter flag
+  mutate(winter_flag = case_when(month %in% c(1, 2, 3, 10, 11, 12) ~ "Winter",
+                            TRUE ~ "Summer")) %>%
+  group_by(winter_flag, year) %>% 
+  summarise(av_attendance = mean(attendance)) %>% 
+  arrange(year)
+
+ae_stats
+```
+
+### Exploratory analysis
+It seems that average A&E attendance is greater in the winter. It also seems that it is increasing.
+
+```{r warning=FALSE}
+ae_stats %>% 
+  mutate(av_attendance = if_else(
+    winter_flag == "Summer", -av_attendance, av_attendance)) %>% 
+  group_by(year) %>% 
+  summarise(diff_av = sum(av_attendance)) %>% 
+  ggplot(aes(year, diff_av)) +
+  geom_col() +
+  xlim(2008, 2021)
+```
+The amount of people that wait in A&E longer than 8 hrs is greater every winter compared to the respective summer.
+
+
+
+
